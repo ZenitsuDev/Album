@@ -102,14 +102,15 @@ public class Album.LocationsSideBarRow : Gtk.ListBoxRow {
 
         remove_button.clicked.connect (() => {
             var folders = Album.Application.settings.get_strv ("sidebar-folders");
-            var gen_array = new GenericArray<string> ();
-            gen_array.data = folders;
+            string[] diminished_folder = {};
 
-            gen_array.remove_index (location_images.index);
+            foreach (var folder in folders) {
+                if (folder != location_images.folder_name) {
+                    diminished_folder += folder;
+                }
+            }
 
-            folders = gen_array.data;
-
-            Album.Application.settings.set_strv ("sidebar-folders", folders);
+            Album.Application.settings.set_strv ("sidebar-folders", diminished_folder);
 
             popover.popdown ();
             var stack = (Gtk.Stack) location_images.parent;
