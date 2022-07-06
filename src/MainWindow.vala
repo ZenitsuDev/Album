@@ -67,15 +67,28 @@ public class Album.MainWindow : Gtk.ApplicationWindow {
         locations_header.add_css_class (Granite.STYLE_CLASS_FLAT);
         locations_header.add_css_class (Granite.STYLE_CLASS_DEFAULT_DECORATION);
 
-        var locations = new Granite.SettingsSidebar (images_stack) {
+        var locations = new Album.LocationsSideBar (images_stack) {
             vexpand = true
         };
+
+        var add_button = new Gtk.Button.with_label ("Add a Folder") {
+            can_focus = false,
+            height_request = 20,
+            margin_start = 10,
+            margin_end = 10,
+            margin_top = 5,
+            margin_bottom = 5,
+            valign = Gtk.Align.CENTER
+        };
+        add_button.add_css_class (Granite.STYLE_CLASS_FLAT);
 
         var locations_sidebar = new Gtk.Box (Gtk.Orientation.VERTICAL, 0) {
             vexpand = true
         };
         locations_sidebar.append (locations_header);
         locations_sidebar.append (locations);
+        locations_sidebar.append (new Gtk.Separator (Gtk.Orientation.HORIZONTAL));
+        locations_sidebar.append (add_button);
         locations_sidebar.add_css_class (Granite.STYLE_CLASS_SIDEBAR);
 
         leaflet = new Adw.Leaflet () {
@@ -94,6 +107,27 @@ public class Album.MainWindow : Gtk.ApplicationWindow {
         transition_stack.add (preview_page);
 
         child = transition_stack;
+
+        var add_dialog = new Gtk.FileChooserNative ("Add a folder", this, Gtk.FileChooserAction.SELECT_FOLDER, "Add", "Cancel") {
+            transient_for = this
+        };
+
+        add_button.clicked.connect (() => {
+            add_dialog.show ();
+        });
+
+        add_dialog.response.connect ((id) => {
+            if (id == Gtk.ResponseType.ACCEPT) {
+                var file = add_dialog.get_file ();
+                if (file.query_file_type (FileQueryInfoFlags.NONE) == FileType.DIRECTORY) {
+                    folders += file.get_path ();
+
+                    Album.Application.settings.set_strv ("sidebar-folders", folders);
+
+                    images_stack.add_child (new Album.LocationImages (file.get_path (), folders.length, this));
+                }
+            }
+        });
 
         var granite_settings = Granite.Settings.get_default ();
         var gtk_settings = Gtk.Settings.get_default ();

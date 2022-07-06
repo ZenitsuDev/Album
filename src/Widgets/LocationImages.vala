@@ -1,11 +1,13 @@
 public class Album.LocationImages : Granite.SettingsPage {
     public string folder_name { get; construct; }
     public Album.MainWindow window { get; construct; }
+    public int index { get; construct; }
+
     public LocationImages (string folder, int index, Album.MainWindow window) {
         var home_name = Environment.get_variable ("HOME");
         var title_name = (folder == home_name) ? "Home" : Filename.display_basename (folder);
         var image = new Gtk.Image () {
-            pixel_size = 32
+            pixel_size = 24
         };
 
         switch (title_name) {
@@ -37,7 +39,8 @@ public class Album.LocationImages : Granite.SettingsPage {
             folder_name: folder,
             title: title_name,
             header: (index == 0) ? "Locations" : null,
-            window: window
+            window: window,
+            index: index
         );
     }
 
