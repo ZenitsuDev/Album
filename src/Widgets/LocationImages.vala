@@ -101,7 +101,7 @@ public class Album.LocationImages : Granite.SettingsPage {
                 var content_type = info.get_content_type ();
                 if ("image" in ContentType.get_mime_type (content_type)) {
                     var file = folder.resolve_relative_path (info.get_name ());
-                    append_image_file (file);
+                    append_image_file (info, file);
                 }
             }
         } catch (Error e) {
@@ -109,15 +109,18 @@ public class Album.LocationImages : Granite.SettingsPage {
         }
     }
 
-    private void append_image_file (File file) {
+    private void append_image_file (FileInfo info, File file) {
         var filename = file.get_path ();
 
     	var stat_file = Stat (filename);
         var time = Time.local (stat_file.st_mtime);
         var modification_date = "%d-%d-%d".printf (time.year + 1900, time.month, time.day);
-        var modification_time = "%d:%d:%d".printf (time.hour, time.minute, time.second);
+        var modification_time = "%d:%s:%s".printf (time.hour,
+            (time.minute > 9) ? time.minute.to_string () : "0" + time.minute.to_string (),
+            (time.second > 9) ? time.second.to_string () : "0" + time.second.to_string ()
+        );
 
-        var size_data = "1000";
+        var size_data = info.get_size ().to_string ();
 
         var groupable_child = new Album.ImageFlowBoxChild (file, modification_date, modification_time, size_data);
 

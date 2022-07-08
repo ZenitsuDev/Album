@@ -127,23 +127,11 @@ public class Album.PreviewPage : Adw.Bin {
         child = leaflet;
     }
 
-    public void set_title (string title) {
-        meta_title.label = Filename.display_basename (title);
-    }
-
-    public void set_time (string time) {
+    public void update_properties (File file, string time, string date, string size) {
+        meta_title.label = file.get_basename ();
         meta_time.label = "<b>Time modified: </b>%s".printf (time);
-    }
-
-    public void set_date (string date) {
         meta_date.label = "<b>Date modified: </b>%s".printf (date);
-    }
-
-    public void set_size (string size) {
         meta_size.label = "<b>File Size: </b>%s".printf (size);
-    }
-
-    public void set_file_path (string path) {
-        meta_filepath.label = "<b>Path: </b>%s".printf (path);
+        meta_filepath.label = "<b>Path: </b>%s".printf (file.get_path ());
     }
 }

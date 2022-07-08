@@ -80,11 +80,7 @@ public class Album.SegregatedFlowbox : Gtk.ListBoxRow {
 
             window.transition_stack.add_shared_element (child.child, window.preview_page.picture);
             window.transition_stack.navigate (window.preview_page);
-            window.preview_page.set_title (child.file.get_path ());
-            window.preview_page.set_time (child.time);
-            window.preview_page.set_date (child.date);
-            window.preview_page.set_file_path (child.file.get_path ());
-            window.preview_page.set_size (child.size_data);
+            window.preview_page.update_properties (child.file, child.time, child.date, child.size_data);
 
             can_close (true);
         });
