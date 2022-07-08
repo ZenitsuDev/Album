@@ -3,6 +3,9 @@ public class Album.LocationImages : Granite.SettingsPage {
     public Album.MainWindow window { get; construct; }
     public int index { get; construct; }
 
+    private Gtk.ListBox box;
+    private string[] date_array = {};
+
     public LocationImages (string folder, int index, Album.MainWindow window) {
         var home_name = Environment.get_variable ("HOME");
         var title_name = (folder == home_name) ? "Home" : Filename.display_basename (folder);
@@ -45,7 +48,7 @@ public class Album.LocationImages : Granite.SettingsPage {
     }
 
     construct {
-        var box = new Gtk.ListBox () {
+        box = new Gtk.ListBox () {
             margin_start = 20,
             margin_end = 20,
             margin_top = 20,
@@ -75,10 +78,9 @@ public class Album.LocationImages : Granite.SettingsPage {
             }
         });
 
-        string[] date_array = {};
-
         var file = File.new_for_path (folder_name);
-        file.enumerate_children_async.begin ("standard::*", FileQueryInfoFlags.NOFOLLOW_SYMLINKS, Priority.DEFAULT, null, (obj, res) => {
+        load_images.begin (file);
+        /*file.enumerate_children_async.begin ("standard::*", FileQueryInfoFlags.NOFOLLOW_SYMLINKS, Priority.DEFAULT, null, (obj, res) => {
 		    try {
 			    var enumerator = file.enumerate_children_async.end (res);
 			    FileInfo info;
@@ -120,7 +122,7 @@ public class Album.LocationImages : Granite.SettingsPage {
             } catch (Error e) {
 	            print ("Error: %s\n", e.message);
             }
-        });
+        });*/
 
 	    var scrolled = new Gtk.ScrolledWindow () {
 	        child = box,
@@ -131,5 +133,49 @@ public class Album.LocationImages : Granite.SettingsPage {
         child = scrolled;
         hexpand = true;
         vexpand = true;
+    }
+
+    private async void load_images (File folder) {
+        try {
+            var e = yield folder.enumerate_children_async ("standard::*", 0, Priority.DEFAULT);
+            FileInfo info;
+
+            while ((info = e.next_file ()) != null) {
+                var content_type = info.get_content_type ();
+                if ("image" in ContentType.get_mime_type (content_type)) {
+                    var file = folder.resolve_relative_path (info.get_name ());
+                    append_image_file (file);
+                }
+            }
+        } catch (Error e) {
+            warning ("%s\n", e.message);
+        }
+    }
+
+    private void append_image_file (File file) {
+        var filename = file.get_path ();
+
+    	var stat_file = Stat (filename);
+        var time = Time.local (stat_file.st_mtime);
+        var modification_date = "%d-%d-%d".printf (time.year + 1900, time.month, time.day);
+        var modification_time = "%d:%d:%d".printf (time.hour, time.minute, time.second);
+
+        var size_data = "1000";
+
+        var groupable_child = new Album.ImageFlowBoxChild (file, modification_date, modification_time, size_data);
+
+        if (!(modification_date in date_array)) {
+            var segregated_flowbox = new Album.SegregatedFlowbox (modification_date, window);
+            segregated_flowbox.append (groupable_child);
+            date_array += modification_date;
+            box.append (segregated_flowbox);
+        } else {
+            for (var index = 0; index < date_array.length; index++) {
+                if (date_array[index] == modification_date) {
+                    var fb = (Album.SegregatedFlowbox) box.get_row_at_index (index);
+                    fb.append (groupable_child);
+                }
+            }
+        }
     }
 }
