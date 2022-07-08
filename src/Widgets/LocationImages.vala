@@ -80,49 +80,6 @@ public class Album.LocationImages : Granite.SettingsPage {
 
         var file = File.new_for_path (folder_name);
         load_images.begin (file);
-        /*file.enumerate_children_async.begin ("standard::*", FileQueryInfoFlags.NOFOLLOW_SYMLINKS, Priority.DEFAULT, null, (obj, res) => {
-		    try {
-			    var enumerator = file.enumerate_children_async.end (res);
-			    FileInfo info;
-			    while ((info = enumerator.next_file (null)) != null) {
-				    var content_type = info.get_content_type ();
-				    if ("image" in ContentType.get_mime_type (content_type)) {
-				        var filename = enumerator.get_child (info).get_path ();
-				        string output;
-
-	                    try {
-		                    Process.spawn_command_line_sync ("stat '%s'".printf(filename), out output, null, null);
-	                    } catch (SpawnError e) {
-		                    print ("Error: %s\n", e.message);
-	                    }
-
-	                    var modification_data = output.split ("\n")[5].split (" ");
-	                    var modification_date = modification_data[1];
-	                    var modification_time = modification_data[2];
-
-	                    var size_data = output.split ("\n")[1].split ("  ")[1][6:];
-
-	                    var groupable_child = new Album.ImageFlowBoxChild (enumerator.get_child (info), modification_date, modification_time, size_data);
-
-	                    if (!(modification_date in date_array)) {
-	                        var segregated_flowbox = new Album.SegregatedFlowbox (modification_date, window);
-                            segregated_flowbox.append (groupable_child);
-                            date_array += modification_date;
-                            box.append (segregated_flowbox);
-	                    } else {
-	                        for (var index = 0; index < date_array.length; index++) {
-                                if (date_array[index] == modification_date) {
-                                    var fb = (Album.SegregatedFlowbox) box.get_row_at_index (index);
-                                    fb.append (groupable_child);
-                                }
-                            }
-	                    }
-                    }
-	            }
-            } catch (Error e) {
-	            print ("Error: %s\n", e.message);
-            }
-        });*/
 
 	    var scrolled = new Gtk.ScrolledWindow () {
 	        child = box,

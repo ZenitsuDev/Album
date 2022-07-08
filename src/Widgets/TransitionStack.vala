@@ -79,13 +79,6 @@ public class TransitionStack : Gtk.Widget {
 
         set_progress (0);
 
-        // var springparams = new Adw.SpringParams (0.8, 1, 200);
-        // animation = new Adw.SpringAnimation (this, 0, 1, springparams, new Adw.CallbackAnimationTarget (value => {
-        //     set_progress (value);
-        // })) {
-        //     initial_velocity = 0,
-        //     epsilon = 0.001
-        // };
         animation = new Adw.TimedAnimation (this, 0, 1, 300, new Adw.CallbackAnimationTarget ((value) => {
             set_progress (value);
         }));

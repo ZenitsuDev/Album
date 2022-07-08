@@ -67,8 +67,15 @@ public class Album.SegregatedFlowbox : Gtk.ListBoxRow {
         main_widget.child_activated.connect ((chil) => {
             var child = (Album.ImageFlowBoxChild) chil;
             index = child.get_index ();
-            var paintable = ((Gtk.Image) child.child).paintable;
-            window.preview_page.picture.paintable = paintable;
+
+            Gdk.Texture texture = null;
+            try {
+                texture = Gdk.Texture.from_file (child.file);
+            } catch (Error e) {
+                critical (e.message);
+            }
+
+            window.preview_page.picture.paintable = texture;
             window.preview_page.label.label = child.file.get_path ();
 
             window.transition_stack.add_shared_element (child.child, window.preview_page.picture);
@@ -98,16 +105,15 @@ public class Album.SegregatedFlowbox : Gtk.ListBoxRow {
             var month = int.parse (splitted_date[1]);
             var day = int.parse (splitted_date[2]);
             var formatted_date = weekdays[
-              (
-                  day
-                + ((153 * (month + 12 * ((14 - month) / 12) - 3) + 2) / 5)
-                + (365 * (year + 4800 - ((14 - month) / 12)))
-                + ((year + 4800 - ((14 - month) / 12)) / 4)
-                - ((year + 4800 - ((14 - month) / 12)) / 100)
-                + ((year + 4800 - ((14 - month) / 12)) / 400)
-                - 32045
-              ) % 7]; // https://stackoverflow.com/questions/6054016/c-program-to-find-day-of-week-given-date
-            return date + " - " + formatted_date;
+                (day + ((153 * (month + 12 * ((14 - month) / 12) - 3) + 2) / 5)
+                    + (365 * (year + 4800 - ((14 - month) / 12)))
+                    + ((year + 4800 - ((14 - month) / 12)) / 4)
+                    - ((year + 4800 - ((14 - month) / 12)) / 100)
+                    + ((year + 4800 - ((14 - month) / 12)) / 400)
+                    - 32045
+                ) % 7]; // https://stackoverflow.com/questions/6054016/c-program-to-find-day-of-week-given-date
+
+            return date + " | " + formatted_date;
         } else {
             return date;
         }
