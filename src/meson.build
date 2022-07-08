@@ -6,7 +6,8 @@ sources = [
     'Widgets/ImageFlowBoxChild.vala',
     'Widgets/TransitionStack.vala',
     'Widgets/PreviewPage.vala',
-    'Widgets/LocationsSideBar.vala'
+    'Widgets/LocationsSideBar.vala',
+    'Widgets/SettingPopover.vala'
 ]
 
 cc = meson.get_compiler('c')

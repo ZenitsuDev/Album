@@ -2,6 +2,8 @@ public class Album.MainWindow : Gtk.ApplicationWindow {
     public Album.PreviewPage preview_page { get; set; }
     public TransitionStack transition_stack { get; set; }
     public Adw.Leaflet leaflet { get; set; }
+    public Gtk.MenuButton sort_button { get; set; }
+    public Album.SettingPopover setting_popover { get; set; }
 
     public MainWindow (Album.Application app) {
         Object (application: app);
@@ -16,6 +18,16 @@ public class Album.MainWindow : Gtk.ApplicationWindow {
         preview_page = new Album.PreviewPage ();
 
         var date_label = new Granite.HeaderLabel ("Album");
+
+        setting_popover = new Album.SettingPopover (this);
+
+        sort_button = new Gtk.MenuButton () {
+            popover = setting_popover,
+            can_focus = false
+        };
+        sort_button.set_icon_name ("preferences-system-symbolic");
+        sort_button.add_css_class (Granite.STYLE_CLASS_FLAT);
+
         var images_header = new Gtk.HeaderBar () {
             decoration_layout = ":maximize",
             show_title_buttons = true,
@@ -23,6 +35,7 @@ public class Album.MainWindow : Gtk.ApplicationWindow {
             halign = Gtk.Align.FILL,
             title_widget = date_label
         };
+        images_header.pack_end (sort_button);
         images_header.add_css_class ("titlebar");
         images_header.add_css_class (Granite.STYLE_CLASS_FLAT);
         images_header.add_css_class (Granite.STYLE_CLASS_DEFAULT_DECORATION);
