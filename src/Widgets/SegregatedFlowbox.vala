@@ -68,6 +68,8 @@ public class Album.SegregatedFlowbox : Gtk.ListBoxRow {
 
             window.transition_stack.add_shared_element (child.child, window.preview_page.picture);
             window.transition_stack.navigate (window.preview_page);
+            window.preview_page.picture.add_css_class ("checkered");
+
             window.preview_page.update_properties (child.file, child.time, child.date, child.size_data);
 
             can_close (true);
@@ -111,6 +113,7 @@ public class Album.SegregatedFlowbox : Gtk.ListBoxRow {
         var child = (Album.ImageFlowBoxChild) main_widget.get_child_at_index (index);
         window.transition_stack.add_shared_element (window.preview_page.picture, child.child);
         window.transition_stack.navigate (window.leaflet);
+        window.preview_page.picture.remove_css_class ("checkered");
 
         can_close (false);
     }

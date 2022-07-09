@@ -16,6 +16,7 @@ m_dep = cc.find_library('m', required : true)
 executable(
     meson.project_name(),
     sources,
+    gresource,
     dependencies: [
         dependency('gtk4'),
         dependency('granite-7'),
