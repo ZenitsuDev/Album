@@ -36,6 +36,22 @@ public class Album.LocationsSideBar : Adw.Bin {
             }
         });
 
+        listbox.set_sort_func ((r1, r2) => {
+            var row1 = (Album.LocationsSideBarRow) r1;
+            var row2 = (Album.LocationsSideBarRow) r2;
+
+            var title1 = row1.location_images.title;
+            var title2 = row1.location_images.title;
+
+            if (title1 == "Trash") {
+                return 1;
+            } else if (title2 == "Trash") {
+                return -1;
+            } else {
+                return 0;
+            }
+        });
+
         listbox.row_activated.connect ((row) => {
             var sidebar_row = (Album.LocationsSideBarRow) row;
             stack.visible_child = sidebar_row.location_images;

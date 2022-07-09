@@ -4,7 +4,6 @@ public class Album.LocationImages : Granite.SettingsPage {
     public int index { get; construct; }
 
     private Gtk.ListBox box;
-    // private int requested_image_size;
     private string[] date_array = {};
 
     public LocationImages (string folder, int index, Album.MainWindow window) {
@@ -36,6 +35,11 @@ public class Album.LocationImages : Granite.SettingsPage {
             default:
                 image.gicon = new ThemedIcon ("folder");
                 break;
+        }
+
+        if (".local/share/Trash/files" in folder) {
+            title_name = "Trash";
+            image.gicon = new ThemedIcon ("user-trash");
         }
 
         Object (

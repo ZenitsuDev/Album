@@ -56,6 +56,7 @@ public class Album.MainWindow : Gtk.ApplicationWindow {
             folders += home_folder + "/Pictures";
             folders += home_folder + "/Pictures/Screenshots/";
             folders += home_folder + "/Downloads";
+            folders += home_folder + "/.local/share/Trash/files";
 
             Album.Application.settings.set_strv ("sidebar-folders", folders);
         }
