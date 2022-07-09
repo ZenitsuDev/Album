@@ -29,33 +29,21 @@ public class Album.SegregatedFlowbox : Gtk.ListBoxRow {
             margin_top = 10,
             margin_bottom = 10
         };
+
         main_widget.set_sort_func ((child1, child2) => {
-            var imagefb1 = (Album.ImageFlowBoxChild) child1;
-            var imagefb2 = (Album.ImageFlowBoxChild) child2;
-
-            var time1 = imagefb1.time.split (":");
-            var time2 = imagefb2.time.split (":");
-
-            var hour1 = int.parse (time1[0]);
-            var hour2 = int.parse (time2[0]);
-
-            var min1 = int.parse (time1[1]);
-            var min2 = int.parse (time2[1]);
-
-            var sec1 = int.parse (time1[2]);
-            var sec2 = int.parse (time2[2]);
-
-            if (hour2 - hour1 != 0) {
-                return hour2 - hour1;
-            } else {
-                if (min2 - min1 != 0) {
-                    return min2 - min1;
-                } else {
-                    return sec2 - sec1;
-                }
+            switch (window.setting_popover.sort_func) {
+                case 0:
+                    return new_to_old (child1, child2);
+                    break;
+                case 1:
+                    return old_to_new (child1, child2);
+                    break;
             }
         });
-        main_widget.invalidate_sort ();
+
+        window.setting_popover.sort_func_changed.connect (() => {
+            main_widget.invalidate_sort ();
+        });
 
         var container_title = new Granite.HeaderLabel (formatted_date ());
         var main_container = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
@@ -125,5 +113,59 @@ public class Album.SegregatedFlowbox : Gtk.ListBoxRow {
         window.transition_stack.navigate (window.leaflet);
 
         can_close (false);
+    }
+
+    private int new_to_old (Gtk.FlowBoxChild child1, Gtk.FlowBoxChild child2) {
+        var imagefb1 = (Album.ImageFlowBoxChild) child1;
+        var imagefb2 = (Album.ImageFlowBoxChild) child2;
+
+        var time1 = imagefb1.time.split (":");
+        var time2 = imagefb2.time.split (":");
+
+        var hour1 = int.parse (time1[0]);
+        var hour2 = int.parse (time2[0]);
+
+        var min1 = int.parse (time1[1]);
+        var min2 = int.parse (time2[1]);
+
+        var sec1 = int.parse (time1[2]);
+        var sec2 = int.parse (time2[2]);
+
+        if (hour2 - hour1 != 0) {
+            return hour2 - hour1;
+        } else {
+            if (min2 - min1 != 0) {
+                return min2 - min1;
+            } else {
+                return sec2 - sec1;
+            }
+        }
+    }
+
+    private int old_to_new (Gtk.FlowBoxChild child1, Gtk.FlowBoxChild child2) {
+        var imagefb1 = (Album.ImageFlowBoxChild) child1;
+        var imagefb2 = (Album.ImageFlowBoxChild) child2;
+
+        var time1 = imagefb1.time.split (":");
+        var time2 = imagefb2.time.split (":");
+
+        var hour1 = int.parse (time1[0]);
+        var hour2 = int.parse (time2[0]);
+
+        var min1 = int.parse (time1[1]);
+        var min2 = int.parse (time2[1]);
+
+        var sec1 = int.parse (time1[2]);
+        var sec2 = int.parse (time2[2]);
+
+        if (hour2 - hour1 != 0) {
+            return hour1 - hour2;
+        } else {
+            if (min2 - min1 != 0) {
+                return min1 - min2;
+            } else {
+                return sec1 - sec2;
+            }
+        }
     }
 }

@@ -58,16 +58,16 @@ public class Album.LocationImages : Granite.SettingsPage {
 
         box.set_sort_func ((row1, row2) => {
             switch (window.setting_popover.sort_func) {
-                case Album.ImageSortFunc.NEW_TO_OLD:
+                case 0:
                     return new_to_old (row1, row2);
                     break;
-                case Album.ImageSortFunc.OLD_TO_NEW:
+                case 1:
                     return old_to_new (row1, row2);
                     break;
             }
         });
 
-        window.setting_popover.notify["sort-func"].connect (() => {
+        window.setting_popover.sort_func_changed.connect (() => {
             box.invalidate_sort ();
         });
 
