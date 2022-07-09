@@ -5,6 +5,8 @@ public class Album.MainWindow : Gtk.ApplicationWindow {
     public Gtk.MenuButton sort_button { get; set; }
     public Album.SettingPopover setting_popover { get; set; }
 
+    public int requested_image_size { get; set; }
+
     public MainWindow (Album.Application app) {
         Object (application: app);
     }
@@ -14,6 +16,7 @@ public class Album.MainWindow : Gtk.ApplicationWindow {
         default_height = 640;
         titlebar = new Gtk.Label ("") { visible = false };
         icon_name = "io.elementary.photos";
+        requested_image_size = Album.Application.settings.get_int ("image-size");
 
         preview_page = new Album.PreviewPage ();
 
