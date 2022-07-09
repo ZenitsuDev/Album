@@ -26,5 +26,10 @@
       <summary>Image date sort format</summary>
       <description>Whether the images should be arranged ascending or descending</description>
     </key>
+    <key name="image-size" type="i">
+      <default>100</default>
+      <summary>Default size for library photos</summary>
+      <description>How large should image icons in library be</description>
+    </key>
   </schema>
 </schemalist>

@@ -4,6 +4,7 @@ public class Album.LocationImages : Granite.SettingsPage {
     public int index { get; construct; }
 
     private Gtk.ListBox box;
+    private int requested_image_size;
     private string[] date_array = {};
 
     public LocationImages (string folder, int index, Album.MainWindow window) {
@@ -71,6 +72,19 @@ public class Album.LocationImages : Granite.SettingsPage {
             box.invalidate_sort ();
         });
 
+        requested_image_size = Album.Application.settings.get_int ("image-size");
+        box.set_filter_func ((wid) => {
+            var flowbox = ((Album.SegregatedFlowbox) wid).main_widget;
+            var children = flowbox.observe_children ();
+            for (var index = 0; index < children.get_n_items (); index++) {
+                var widget = (Album.ImageFlowBoxChild) children.get_item (index);
+                widget.width_request = requested_image_size;
+                widget.height_request = requested_image_size;
+            }
+
+            return true;
+        });
+
         var file = File.new_for_path (folder_name);
         load_images.begin (file);
 
@@ -79,6 +93,25 @@ public class Album.LocationImages : Granite.SettingsPage {
 	        hexpand = true,
 	        vexpand = true
 	    };
+
+	    var controller1 = (Gtk.EventControllerScroll) scrolled.observe_controllers ().get_item (1);
+	    controller1.scroll.connect ((event, x, y) => {
+	        var state = event.get_current_event_state ();
+            if (state.to_string () == "GDK_CONTROL_MASK") {
+                if (y > 0 && requested_image_size < 200) {
+                    requested_image_size = requested_image_size + 5;
+                } else if (y < 0 && requested_image_size > 50) {
+                    requested_image_size = requested_image_size - 5;
+                }
+
+                box.invalidate_filter ();
+                Album.Application.settings.set_int ("image-size", requested_image_size);
+
+                return true;
+            } else {
+                return false;
+            }
+	    });
 
         child = scrolled;
         hexpand = true;
