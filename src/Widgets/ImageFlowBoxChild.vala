@@ -184,7 +184,12 @@ public class TextureLoader : Object {
 
                 var bytes = texture_paintable.save_to_png_bytes ();
                 var temp_file = File.new_for_path (Environment.get_user_cache_dir () + "/" + bytes.length.to_string () + "tmp.png");
-                temp_file.replace_contents (bytes.get_data (), null, false, 0, null, null);
+
+                try {
+                    temp_file.replace_contents (bytes.get_data (), null, false, 0, null, null);
+                } catch (Error e) {
+                    warning (e.message);
+                }
 
                 try {
                     var pixbuf = new Gdk.Pixbuf.from_file_at_scale (temp_file.get_path (), width, height, false);

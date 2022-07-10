@@ -16,7 +16,25 @@ public class Album.LocationsSideBar : Adw.Bin {
         child = listbox;
         width_request = 200;
 
-        listbox.bind_model (stack.pages, (item) => {
+        var sort = new Gtk.CustomSorter ((r1, r2) => {
+            var page1 = (Gtk.StackPage) r1;
+            var page2 = (Gtk.StackPage) r2;
+
+            var title1 = ((Album.LocationImages) page1.child).title;
+            var title2 = ((Album.LocationImages) page2.child).title;
+
+            if (title1 == "Trash") {
+                return 1;
+            } else if (title2 == "Trash") {
+                return -1;
+            } else {
+                return 0;
+            }
+        });
+
+        var sort_model = new Gtk.SortListModel (stack.pages, sort);
+
+        listbox.bind_model (sort_model, (item) => {
             var stack_page = (Gtk.StackPage) item;
             var image_view = (Album.LocationImages) stack_page.child;
 
@@ -33,22 +51,6 @@ public class Album.LocationsSideBar : Adw.Bin {
 
                 label.get_style_context ().add_class (Granite.STYLE_CLASS_H4_LABEL);
                 row.set_header (label);
-            }
-        });
-
-        listbox.set_sort_func ((r1, r2) => {
-            var row1 = (Album.LocationsSideBarRow) r1;
-            var row2 = (Album.LocationsSideBarRow) r2;
-
-            var title1 = row1.location_images.title;
-            var title2 = row1.location_images.title;
-
-            if (title1 == "Trash") {
-                return 1;
-            } else if (title2 == "Trash") {
-                return -1;
-            } else {
-                return 0;
             }
         });
 
