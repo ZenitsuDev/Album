@@ -66,7 +66,7 @@ public class ThumbnailPaintable : Object, Gdk.Paintable {
             last_height = h;
             loading = true;
 
-            loader.load (file, w, h, tag, this, (w2, h2, t) => {
+            loader.load (file, w, h, tag, (w2, h2, t) => {
                 loading = false;
 
                 if (w2 == last_width && h2 == last_height) {
@@ -106,7 +106,6 @@ public class TextureLoader : Object {
         int width;
         int height;
         string tag;
-        Object source;
         unowned TextureReadyCallback cb;
     }
 
@@ -242,7 +241,7 @@ public class TextureLoader : Object {
         }
     }
 
-    public void load (File file, int width, int height, string tag, Object source, TextureReadyCallback cb) {
-        request_queue.push_front ({ file, width, height, tag, source, cb });
+    public void load (File file, int width, int height, string tag, TextureReadyCallback cb) {
+        request_queue.push_front ({ file, width, height, tag, cb });
     }
 }
