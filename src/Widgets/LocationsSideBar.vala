@@ -97,15 +97,6 @@ public class Album.LocationsSideBarRow : Gtk.ListBoxRow {
         };
         add_controller (gesture);
 
-        // var remove_button = new Gtk.Button.with_label ("Remove") {
-        //     width_request = 100,
-        //     height_request = 20,
-        //     margin_top = 6,
-        //     margin_bottom = 6,
-        //     can_focus = false
-        // };
-        // remove_button.add_css_class (Granite.STYLE_CLASS_FLAT);
-
         var menu = new Menu ();
         menu.append ("Remove", "app.remove");
 
