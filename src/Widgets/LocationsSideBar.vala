@@ -90,26 +90,29 @@ public class Album.LocationsSideBarRow : Gtk.ListBoxRow {
         box.append (label);
 
         child = box;
+        tooltip_text = location_images.folder_name;
 
         var gesture = new Gtk.GestureClick () {
             button = Gdk.BUTTON_SECONDARY
         };
         add_controller (gesture);
 
-        var remove_button = new Gtk.Button.with_label ("Remove") {
-            width_request = 100,
-            height_request = 20,
-            margin_top = 6,
-            margin_bottom = 6,
-            can_focus = false
-        };
-        remove_button.add_css_class (Granite.STYLE_CLASS_FLAT);
+        // var remove_button = new Gtk.Button.with_label ("Remove") {
+        //     width_request = 100,
+        //     height_request = 20,
+        //     margin_top = 6,
+        //     margin_bottom = 6,
+        //     can_focus = false
+        // };
+        // remove_button.add_css_class (Granite.STYLE_CLASS_FLAT);
 
-        var popover = new Gtk.Popover () {
+        var menu = new Menu ();
+        menu.append ("Remove", "app.remove");
+
+        var popover = new Gtk.PopoverMenu.from_model (menu) {
             position = Gtk.PositionType.RIGHT,
             has_arrow = false,
-            autohide = true,
-            child = remove_button
+            autohide = true
         };
         popover.set_parent (this);
 
@@ -118,21 +121,22 @@ public class Album.LocationsSideBarRow : Gtk.ListBoxRow {
             popover.popup ();
         });
 
-        remove_button.clicked.connect (() => {
+        install_action ("app.remove", null, (widget) => {
+            var self = (Album.LocationsSideBarRow) widget;
             var folders = Album.Application.settings.get_strv ("sidebar-folders");
             string[] diminished_folder = {};
 
             foreach (var folder in folders) {
-                if (folder != location_images.folder_name) {
+                if (folder != self.location_images.folder_name) {
                     diminished_folder += folder;
                 }
             }
 
             Album.Application.settings.set_strv ("sidebar-folders", diminished_folder);
 
-            popover.popdown ();
-            var stack = (Gtk.Stack) location_images.parent;
-            stack.remove (location_images);
+            // popover.popdown ();
+            var stack = (Gtk.Stack) self.location_images.parent;
+            stack.remove (self.location_images);
         });
     }
 }
