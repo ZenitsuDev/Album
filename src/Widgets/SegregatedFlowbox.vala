@@ -88,7 +88,6 @@ public class Album.SegregatedFlowbox : Gtk.ListBoxRow {
 
             window.transition_stack.add_shared_element (child.child, location_images.preview_page.picture);
             window.transition_stack.navigate (window.preview_container);
-            location_images.preview_page.picture.add_css_class ("checkered");
 
             can_close (true);
         });

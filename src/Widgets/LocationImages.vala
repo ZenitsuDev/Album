@@ -192,7 +192,6 @@ public class Album.LocationImages : Granite.SettingsPage {
     public void halt_preview () {
         window.transition_stack.add_shared_element (preview_page.picture, closeable_child.child);
         window.transition_stack.navigate (window.leaflet);
-        preview_page.picture.remove_css_class ("checkered");
 
         active_segfb.can_close (false);
     }
@@ -249,6 +248,7 @@ public class Album.LocationImages : Granite.SettingsPage {
             hexpand = true,
             vexpand = true
         };
+        picture.add_css_class ("checkered");
 
         var position = derive_position (groupable_child);
         preview_page.images_carousel.insert (picture, position);
