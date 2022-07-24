@@ -9,6 +9,7 @@ public class Album.PreviewPage : Adw.Bin {
     private Gtk.Label meta_time;
     private Gtk.Label meta_date;
     private Gtk.Label meta_filepath;
+    private Gtk.Scale zoom_slider;
 
     private Gtk.Button go_back;
     private Gtk.Button go_next;
@@ -88,9 +89,37 @@ public class Album.PreviewPage : Adw.Bin {
         buttons_overlay.add_overlay (next_revealer);
         buttons_overlay.add_controller (motion_controller);
 
+        zoom_slider = new Gtk.Scale.with_range (Gtk.Orientation.HORIZONTAL, 2, 200, 2) {
+            width_request = 250,
+            hexpand = true,
+            halign = Gtk.Align.CENTER
+        };
+        zoom_slider.set_value (100);
+        zoom_slider.add_mark (50, Gtk.PositionType.TOP, "50 %");
+        zoom_slider.add_mark (100, Gtk.PositionType.TOP, "<b>100</b>");
+        zoom_slider.add_mark (150, Gtk.PositionType.TOP, "150 %");
+
+        var grab_foci = new SimpleAction ("app.focus_slider", null);
+        grab_foci.activate.connect (() => {
+            print ("HAHAHA");
+            zoom_slider.grab_focus ();
+        });
+
+        add_binding_action (Gdk.Key.plus, Gdk.ModifierType.CONTROL_MASK, "focus_slider", null);
+
+        var controls_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0) {
+            margin_start = 10,
+            margin_end = 10,
+            margin_top = 10,
+            margin_bottom = 10,
+            hexpand = true
+        };
+        controls_box.append (zoom_slider);
+
         var preview_view = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
         preview_view.append (preview_header);
         preview_view.append (buttons_overlay);
+        preview_view.append (controls_box);
         preview_view.add_css_class (Granite.STYLE_CLASS_VIEW);
 
         var meta_header = new Gtk.HeaderBar () {
