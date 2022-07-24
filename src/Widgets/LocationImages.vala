@@ -66,12 +66,35 @@ public class Album.LocationImages : Granite.SettingsPage {
         };
 
         box.set_sort_func ((row1, row2) => {
+            var date1 = ((Album.SegregatedFlowbox) row1).date.split ("-");
+            var date2 = ((Album.SegregatedFlowbox) row2).date.split ("-");
+
+            var year1 = int.parse (date1[0]);
+            var month1 = int.parse (date1[1]);
+            var day1 = int.parse (date1[2]);
+
+            var year2 = int.parse (date2[0]);
+            var month2 = int.parse (date2[1]);
+            var day2 = int.parse (date2[2]);
+
+            var func = 0;
+
+            if (year2 - year1 != 0) {
+                func = year2 - year1;
+            } else {
+                if (month2 - month1 != 0) {
+                    func = month2 - month1;
+                } else {
+                    func = day2 - day1;
+                }
+            }
+
             switch (window.setting_popover.sort_func) {
                 case 0:
-                    return new_to_old (row1, row2);
+                    return func; // new to old
                     break;
                 case 1:
-                    return old_to_new (row1, row2);
+                    return func * -1; // old to new
                     break;
             }
         });
@@ -242,51 +265,5 @@ public class Album.LocationImages : Granite.SettingsPage {
         }
 
         return item_index + child.get_index ();
-    }
-
-    private int new_to_old (Gtk.ListBoxRow row1, Gtk.ListBoxRow row2) {
-        var date1 = ((Album.SegregatedFlowbox) row1).date.split ("-");
-        var date2 = ((Album.SegregatedFlowbox) row2).date.split ("-");
-
-        var year1 = int.parse (date1[0]);
-        var month1 = int.parse (date1[1]);
-        var day1 = int.parse (date1[2]);
-
-        var year2 = int.parse (date2[0]);
-        var month2 = int.parse (date2[1]);
-        var day2 = int.parse (date2[2]);
-
-        if (year2 - year1 != 0) {
-            return year2 - year1;
-        } else {
-            if (month2 - month1 != 0) {
-                return month2 - month1;
-            } else {
-                return day2 - day1;
-            }
-        }
-    }
-
-    private int old_to_new (Gtk.ListBoxRow row1, Gtk.ListBoxRow row2) {
-        var date1 = ((Album.SegregatedFlowbox) row1).date.split ("-");
-        var date2 = ((Album.SegregatedFlowbox) row2).date.split ("-");
-
-        var year1 = int.parse (date1[0]);
-        var month1 = int.parse (date1[1]);
-        var day1 = int.parse (date1[2]);
-
-        var year2 = int.parse (date2[0]);
-        var month2 = int.parse (date2[1]);
-        var day2 = int.parse (date2[2]);
-
-        if (year2 - year1 != 0) {
-            return year1 - year2;
-        } else {
-            if (month2 - month1 != 0) {
-                return month1 - month2;
-            } else {
-                return day1 - day2;
-            }
-        }
     }
 }
