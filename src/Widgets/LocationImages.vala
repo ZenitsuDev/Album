@@ -133,7 +133,8 @@ public class Album.LocationImages : Granite.SettingsPage {
         preview_page = new Album.PreviewPage ();
 
         preview_page.images_carousel.page_changed.connect ((carousel, idx) => {
-            preview_page.picture = (Gtk.Picture) preview_page.images_carousel.get_nth_page (idx);
+            var viewport = (Gtk.Viewport) preview_page.images_carousel.get_nth_page (idx);
+            preview_page.picture = (Gtk.Picture) viewport.child;
 
             var new_index = (int) idx;
             var box_index = 0;
@@ -250,8 +251,16 @@ public class Album.LocationImages : Granite.SettingsPage {
         };
         picture.add_css_class ("checkered");
 
+        var viewport = new Gtk.Viewport (null, null) {
+            child = picture,
+            halign = Gtk.Align.CENTER,
+            valign = Gtk.Align.CENTER,
+            hexpand = true,
+            vexpand = true
+        };
+
         var position = derive_position (groupable_child);
-        preview_page.images_carousel.insert (picture, position);
+        preview_page.images_carousel.insert (viewport, position);
     }
 
     private int derive_position (Album.ImageFlowBoxChild child) {

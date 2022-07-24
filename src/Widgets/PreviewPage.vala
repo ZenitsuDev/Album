@@ -190,9 +190,10 @@ public class Album.PreviewPage : Adw.Bin {
 
     public void set_active (Album.ImageFlowBoxChild child) {
         for (var index = 0; index < images_carousel.n_pages; index++) {
-            if (((Gtk.Picture) images_carousel.get_nth_page (index)).paintable == child.paintable) {
-                picture = (Gtk.Picture) images_carousel.get_nth_page (index);
-                images_carousel.scroll_to (picture, false);
+            var viewport = (Gtk.Viewport) images_carousel.get_nth_page (index);
+            if (((Gtk.Picture) viewport.child).paintable == child.paintable) {
+                picture = (Gtk.Picture) viewport.child;
+                images_carousel.scroll_to (viewport, false);
                 update_properties (child);
             }
         }
