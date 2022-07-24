@@ -1,5 +1,6 @@
 public class Album.LocationsSideBar : Adw.Bin {
     public Gtk.Stack stack { get; construct; }
+
     public LocationsSideBar (Gtk.Stack stack) {
         Object (
             stack: stack
@@ -125,7 +126,6 @@ public class Album.LocationsSideBarRow : Gtk.ListBoxRow {
 
             Album.Application.settings.set_strv ("sidebar-folders", diminished_folder);
 
-            // popover.popdown ();
             var stack = (Gtk.Stack) self.location_images.parent;
             stack.remove (self.location_images);
         });

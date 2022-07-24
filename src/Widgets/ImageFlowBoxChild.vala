@@ -4,6 +4,8 @@ public class Album.ImageFlowBoxChild : Gtk.FlowBoxChild {
     public string date { get; construct; }
     public string size_data { get; construct; }
 
+    public ThumbnailPaintable paintable { get; set; }
+
     public ImageFlowBoxChild (File file, string date, string time, string size_data) {
         Object (
             file: file,
@@ -18,7 +20,7 @@ public class Album.ImageFlowBoxChild : Gtk.FlowBoxChild {
             hexpand = true,
             vexpand = true
         };
-        image.paintable = new ThumbnailPaintable (file, file.get_path (), image);
+        image.paintable = paintable = new ThumbnailPaintable (file, file.get_path (), image);
 
         width_request = 100;
         height_request = 100;

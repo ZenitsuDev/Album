@@ -1,7 +1,11 @@
 public class Album.LocationImages : Granite.SettingsPage {
     public string folder_name { get; construct; }
-    public Album.MainWindow window { get; construct; }
     public int index { get; construct; }
+    public Album.MainWindow window { get; construct; }
+
+    public Album.PreviewPage preview_page { get; set; }
+    public Album.ImageFlowBoxChild closeable_child { get; set; }
+    public Album.SegregatedFlowbox active_segfb { get; set; }
 
     private Gtk.ListBox box;
     private string[] date_array = {};
@@ -88,8 +92,45 @@ public class Album.LocationImages : Granite.SettingsPage {
             return true;
         });
 
+        box.set_header_func ((row, before) => {
+            var header = ((Album.SegregatedFlowbox) row).header;
+            if (header != null) {
+                var label = new Granite.HeaderLabel (header) {
+                    halign = Gtk.Align.START
+                };
+
+                row.set_header (label);
+            }
+        });
+
         window.notify["requested-image-size"].connect (() => {
             box.invalidate_filter ();
+        });
+
+        preview_page = new Album.PreviewPage ();
+
+        preview_page.images_carousel.page_changed.connect ((carousel, idx) => {
+            preview_page.picture = (Gtk.Picture) preview_page.images_carousel.get_nth_page (idx);
+
+            var new_index = (int) idx;
+            var box_index = 0;
+            while (((Album.SegregatedFlowbox) box.get_row_at_index (box_index))
+                .children_count - 1 < new_index) {
+
+                new_index = new_index -
+                    ((Album.SegregatedFlowbox) box.get_row_at_index (box_index)).children_count;
+                box_index++;
+            }
+
+            active_segfb = (Album.SegregatedFlowbox) box.get_row_at_index (box_index);
+            closeable_child = (Album.ImageFlowBoxChild) 
+                active_segfb.main_widget.get_child_at_index (new_index);
+
+            preview_page.update_properties (closeable_child);
+        });
+
+        this.map.connect (() => {
+            window.preview_container.child = preview_page;
         });
 
         var file = File.new_for_path (folder_name);
@@ -125,6 +166,14 @@ public class Album.LocationImages : Granite.SettingsPage {
         vexpand = true;
     }
 
+    public void halt_preview () {
+        window.transition_stack.add_shared_element (preview_page.picture, closeable_child.child);
+        window.transition_stack.navigate (window.leaflet);
+        preview_page.picture.remove_css_class ("checkered");
+
+        active_segfb.can_close (false);
+    }
+
     private async void load_images (File folder) {
         try {
             var e = yield folder.enumerate_children_async ("standard::*", 0, Priority.DEFAULT);
@@ -158,7 +207,7 @@ public class Album.LocationImages : Granite.SettingsPage {
         var groupable_child = new Album.ImageFlowBoxChild (file, modification_date, modification_time, size_data);
 
         if (!(modification_date in date_array)) {
-            var segregated_flowbox = new Album.SegregatedFlowbox (modification_date, window);
+            var segregated_flowbox = new Album.SegregatedFlowbox (this, modification_date, window);
             segregated_flowbox.append (groupable_child);
             date_array += modification_date;
             box.append (segregated_flowbox);
@@ -170,6 +219,29 @@ public class Album.LocationImages : Granite.SettingsPage {
                 }
             }
         }
+
+        var picture = new Gtk.Picture.for_paintable (groupable_child.paintable) {
+            halign = Gtk.Align.CENTER,
+            valign = Gtk.Align.CENTER,
+            hexpand = true,
+            vexpand = true
+        };
+
+        var position = derive_position (groupable_child);
+        preview_page.images_carousel.insert (picture, position);
+    }
+
+    private int derive_position (Album.ImageFlowBoxChild child) {
+        var segregated_flowbox = (Album.SegregatedFlowbox) child.parent.parent;
+        var segfb_index = segregated_flowbox.get_index ();
+
+        int item_index = 0;
+        for (var index = 0; index < segfb_index; index++) {
+            var prev_segfb = (Album.SegregatedFlowbox) box.get_row_at_index (index);
+            item_index += (int) prev_segfb.main_widget.observe_children ().get_n_items ();
+        }
+
+        return item_index + child.get_index ();
     }
 
     private int new_to_old (Gtk.ListBoxRow row1, Gtk.ListBoxRow row2) {

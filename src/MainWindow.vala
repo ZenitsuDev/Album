@@ -1,8 +1,8 @@
 public class Album.MainWindow : Gtk.ApplicationWindow {
-    public Album.PreviewPage preview_page { get; set; }
-    public TransitionStack transition_stack { get; set; }
+    public Adw.Bin preview_container { get; set; }
     public Adw.Leaflet leaflet { get; set; }
     public Gtk.MenuButton sort_button { get; set; }
+    public TransitionStack transition_stack { get; set; }
     public Album.SettingPopover setting_popover { get; set; }
 
     public int requested_image_size { get; set; }
@@ -18,7 +18,7 @@ public class Album.MainWindow : Gtk.ApplicationWindow {
         icon_name = "io.elementary.photos";
         requested_image_size = Album.Application.settings.get_int ("image-size");
 
-        preview_page = new Album.PreviewPage ();
+        preview_container = new Adw.Bin ();
 
         var date_label = new Granite.HeaderLabel ("Album");
 
@@ -120,8 +120,8 @@ public class Album.MainWindow : Gtk.ApplicationWindow {
         });
 
         transition_stack = new TransitionStack ();
-        transition_stack.add (leaflet);
-        transition_stack.add (preview_page);
+        transition_stack.add_child (leaflet);
+        transition_stack.add_child (preview_container);
 
         child = transition_stack;
 

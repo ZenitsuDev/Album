@@ -1,7 +1,8 @@
 public class Album.PreviewPage : Adw.Bin {
-    public Gtk.Picture picture { get; set; }
+    public Adw.Carousel images_carousel { get; set; }
     public Granite.HeaderLabel label { get; set; }
     public Gtk.Button halt_button { get; set; }
+    public Gtk.Picture picture { get; set; }
     private Gtk.Label meta_title;
     private Gtk.Label meta_size;
     private Gtk.Label meta_time;
@@ -33,24 +34,16 @@ public class Album.PreviewPage : Adw.Bin {
         preview_header.add_css_class (Granite.STYLE_CLASS_FLAT);
         preview_header.add_css_class (Granite.STYLE_CLASS_DEFAULT_DECORATION);
 
-        picture = new Gtk.Picture () {
-            halign = Gtk.Align.CENTER,
-            valign = Gtk.Align.CENTER,
-            hexpand = true,
-            vexpand = true,
-        };
-
-        var preview_grid = new Gtk.Grid () {
+        images_carousel = new Adw.Carousel () {
             margin_start = 20,
             margin_end = 20,
             margin_top = 20,
             margin_bottom = 20
         };
-        preview_grid.attach (picture, 0, 0);
 
         var preview_view = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
         preview_view.append (preview_header);
-        preview_view.append (preview_grid);
+        preview_view.append (images_carousel);
         preview_view.add_css_class (Granite.STYLE_CLASS_VIEW);
 
         var meta_header = new Gtk.HeaderBar () {
@@ -127,11 +120,21 @@ public class Album.PreviewPage : Adw.Bin {
         child = leaflet;
     }
 
-    public void update_properties (File file, string time, string date, string size) {
-        meta_title.label = file.get_basename ();
-        meta_time.label = "<b>Time modified: </b>%s".printf (time);
-        meta_date.label = "<b>Date modified: </b>%s".printf (date);
-        meta_size.label = "<b>File Size: </b>%s".printf (size);
-        meta_filepath.label = "<b>Path: </b>%s".printf (file.get_path ());
+    public void set_active (Album.ImageFlowBoxChild child) {
+        for (var index = 0; index < images_carousel.n_pages; index++) {
+            if (((Gtk.Picture) images_carousel.get_nth_page (index)).paintable == child.paintable) {
+                picture = (Gtk.Picture) images_carousel.get_nth_page (index);
+                images_carousel.scroll_to (picture, false);
+                update_properties (child);
+            }
+        }
+    }
+
+    public void update_properties (Album.ImageFlowBoxChild child) {
+        meta_title.label = child.file.get_basename ();
+        meta_time.label = "<b>Time modified: </b>%s".printf (child.time);
+        meta_date.label = "<b>Date modified: </b>%s".printf (child.date);
+        meta_size.label = "<b>File Size: </b>%s".printf (child.size_data);
+        meta_filepath.label = "<b>Path: </b>%s".printf (child.file.get_path ());
     }
 }

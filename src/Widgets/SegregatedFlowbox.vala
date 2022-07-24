@@ -1,20 +1,25 @@
 public class Album.SegregatedFlowbox : Gtk.ListBoxRow {
-    public Gtk.FlowBox main_widget { get; set; }
     public string date { get; construct; }
     public Album.MainWindow window { get; construct; }
-    private signal void can_close (bool condition);
+    public Album.LocationImages location_images { get; construct; }
 
-    private int index;
+    public Gtk.FlowBox main_widget { get; set; }
+    public int index { get; set; }
+    public int children_count { get; set; }
+    public string header { get; set; }
+
+    public signal void can_close (bool condition);
 
     private string[] weekdays = {
         "Monday", "Tuesday", "Wednesday",
         "Thursday", "Friday", "Saturday", "Sunday"
     };
 
-    public SegregatedFlowbox (string date, Album.MainWindow window) {
+    public SegregatedFlowbox (Album.LocationImages location_images, string date, Album.MainWindow window) {
         Object (
             date: date,
-            window: window
+            window: window,
+            location_images: location_images
         );
     }
 
@@ -45,41 +50,28 @@ public class Album.SegregatedFlowbox : Gtk.ListBoxRow {
             main_widget.invalidate_sort ();
         });
 
-        var container_title = new Granite.HeaderLabel (formatted_date ());
-        var main_container = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
-        main_container.append (container_title);
-        main_container.append (main_widget);
-        child = main_container;
+        header = formatted_date ();
+        child = main_widget;
         can_focus = false;
 
         main_widget.child_activated.connect ((chil) => {
             var child = (Album.ImageFlowBoxChild) chil;
             index = child.get_index ();
 
-            Gdk.Texture texture = null;
-            try {
-                texture = Gdk.Texture.from_file (child.file);
-            } catch (Error e) {
-                critical (e.message);
-            }
+            location_images.preview_page.set_active (child);
 
-            window.preview_page.picture.paintable = texture;
-            window.preview_page.label.label = child.file.get_path ();
-
-            window.transition_stack.add_shared_element (child.child, window.preview_page.picture);
-            window.transition_stack.navigate (window.preview_page);
-            window.preview_page.picture.add_css_class ("checkered");
-
-            window.preview_page.update_properties (child.file, child.time, child.date, child.size_data);
+            window.transition_stack.add_shared_element (child.child, location_images.preview_page.picture);
+            window.transition_stack.navigate (window.preview_container);
+            location_images.preview_page.picture.add_css_class ("checkered");
 
             can_close (true);
         });
 
         can_close.connect ((condition) => {
             if (condition) {
-                window.preview_page.halt_button.clicked.connect (halt_preview);
+                location_images.preview_page.halt_button.clicked.connect (location_images.halt_preview);
             } else {
-                window.preview_page.halt_button.clicked.disconnect (halt_preview);
+                location_images.preview_page.halt_button.clicked.disconnect (location_images.halt_preview);
             }
         });
     }
@@ -107,15 +99,7 @@ public class Album.SegregatedFlowbox : Gtk.ListBoxRow {
 
     public void append (Album.ImageFlowBoxChild child) {
         main_widget.append (child);
-    }
-
-    private void halt_preview () {
-        var child = (Album.ImageFlowBoxChild) main_widget.get_child_at_index (index);
-        window.transition_stack.add_shared_element (window.preview_page.picture, child.child);
-        window.transition_stack.navigate (window.leaflet);
-        window.preview_page.picture.remove_css_class ("checkered");
-
-        can_close (false);
+        children_count = (int) main_widget.observe_children ().get_n_items ();
     }
 
     private int new_to_old (Gtk.FlowBoxChild child1, Gtk.FlowBoxChild child2) {

@@ -23,7 +23,7 @@ public class TransitionStack : Gtk.Widget {
 
     public signal void animation_done ();
 
-    public void add (Gtk.Widget widget) {
+    public void add_child (Gtk.Widget widget) {
         widget.set_parent (this); // TODO make sure it's before the transition pics
 
         if (visible_child == null)
