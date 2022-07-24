@@ -3,11 +3,15 @@ public class Album.PreviewPage : Adw.Bin {
     public Granite.HeaderLabel label { get; set; }
     public Gtk.Button halt_button { get; set; }
     public Gtk.Picture picture { get; set; }
+
     private Gtk.Label meta_title;
     private Gtk.Label meta_size;
     private Gtk.Label meta_time;
     private Gtk.Label meta_date;
     private Gtk.Label meta_filepath;
+
+    private Gtk.Button go_back;
+    private Gtk.Button go_next;
 
     construct {
         var preview_halt_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
@@ -34,6 +38,8 @@ public class Album.PreviewPage : Adw.Bin {
         preview_header.add_css_class (Granite.STYLE_CLASS_FLAT);
         preview_header.add_css_class (Granite.STYLE_CLASS_DEFAULT_DECORATION);
 
+        var motion_controller = new Gtk.EventControllerMotion ();
+
         images_carousel = new Adw.Carousel () {
             margin_start = 20,
             margin_end = 20,
@@ -41,9 +47,50 @@ public class Album.PreviewPage : Adw.Bin {
             margin_bottom = 20
         };
 
+        go_back = new Gtk.Button () {
+            margin_start = 20,
+            child = new Gtk.Image.from_icon_name ("go-previous-symbolic") {
+                pixel_size = 48
+            }
+        };
+        go_back.add_css_class (Granite.STYLE_CLASS_FLAT);
+
+        go_next = new Gtk.Button () {
+            margin_end = 20,
+            child = new Gtk.Image.from_icon_name ("go-next-symbolic") {
+                pixel_size = 48
+            }
+        };
+        go_next.add_css_class (Granite.STYLE_CLASS_FLAT);
+
+        var back_revealer = new Gtk.Revealer () {
+            child = go_back,
+            transition_type = Gtk.RevealerTransitionType.CROSSFADE,
+            transition_duration = 200,
+            halign = Gtk.Align.START,
+            valign = Gtk.Align.CENTER
+        };
+
+        var next_revealer = new Gtk.Revealer () {
+            child = go_next,
+            transition_type = Gtk.RevealerTransitionType.CROSSFADE,
+            transition_duration = 200,
+            halign = Gtk.Align.END,
+            valign = Gtk.Align.CENTER
+        };
+
+        var buttons_overlay = new Gtk.Overlay () {
+            child = images_carousel,
+            hexpand = true,
+            vexpand = true
+        };
+        buttons_overlay.add_overlay (back_revealer);
+        buttons_overlay.add_overlay (next_revealer);
+        buttons_overlay.add_controller (motion_controller);
+
         var preview_view = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
         preview_view.append (preview_header);
-        preview_view.append (images_carousel);
+        preview_view.append (buttons_overlay);
         preview_view.add_css_class (Granite.STYLE_CLASS_VIEW);
 
         var meta_header = new Gtk.HeaderBar () {
@@ -118,6 +165,27 @@ public class Album.PreviewPage : Adw.Bin {
         leaflet.append (meta_sidebar);
 
         child = leaflet;
+
+        motion_controller.enter.connect (() => {
+            back_revealer.reveal_child = true;
+            next_revealer.reveal_child = true;
+        });
+
+        motion_controller.leave.connect (() => {
+            back_revealer.reveal_child = false;
+            next_revealer.reveal_child = false;
+        });
+
+        go_back.clicked.connect (() => {
+            progress_carousel (false);
+        });
+
+        go_next.clicked.connect (() => {
+            progress_carousel (true);
+        });
+
+        this.map.connect (handle_navigation_button_sensitivity);
+        images_carousel.page_changed.connect (handle_navigation_button_sensitivity);
     }
 
     public void set_active (Album.ImageFlowBoxChild child) {
@@ -136,5 +204,24 @@ public class Album.PreviewPage : Adw.Bin {
         meta_date.label = "<b>Date modified: </b>%s".printf (child.date);
         meta_size.label = "<b>File Size: </b>%s".printf (child.size_data);
         meta_filepath.label = "<b>Path: </b>%s".printf (child.file.get_path ());
+    }
+
+    private void handle_navigation_button_sensitivity () {
+        if (images_carousel.position - 1 < 0) {
+            go_back.sensitive = false;
+        } else if (images_carousel.position >= images_carousel.n_pages - 1) {
+            go_next.sensitive = false;
+        } else {
+            go_back.sensitive = true;
+            go_next.sensitive = true;
+        }
+    }
+
+    private void progress_carousel (bool progress) {
+        if (progress) {
+            images_carousel.scroll_to (images_carousel.get_nth_page ((uint) images_carousel.position + 1), true);
+        } else {
+            images_carousel.scroll_to (images_carousel.get_nth_page ((uint) images_carousel.position - 1), true);
+        }
     }
 }
