@@ -10,7 +10,7 @@ public class Album.PreviewPage : Adw.Bin {
     private Gtk.Label meta_date;
     private Gtk.Label meta_filepath;
     private Gtk.Scale zoom_slider;
-    private Gtk.Viewport viewport;
+    private Gtk.ScrolledWindow viewport;
 
     private Gtk.Button go_back;
     private Gtk.Button go_next;
@@ -107,21 +107,15 @@ public class Album.PreviewPage : Adw.Bin {
         zoom_slider.add_mark (100, Gtk.PositionType.TOP, "<b>100</b>");
         zoom_slider.add_mark (150, Gtk.PositionType.TOP, "150 %");
 
-        zoom_slider.value_changed.connect (() => {
+        zoom_slider.adjustment.notify["value"].connect (() => {
             if (picture != null) {
-                // picture.width_request = picture.width_request * (zoom_slider.get_value () / 100);
-                // picture.width_request = picture.width_request * (zoom_slider.get_value () / 100);
-                // var width = picture.get_allocated_width ();
-                // var height = picture.get_allocated_height ();
-                // Gtk.Allocation allocation;
-                // picture.get_allocation (out allocation);
-                // allocation.width = width * ((int) zoom_slider.get_value () / 100);
-                // allocation.width = 300;
-                // allocation.height = 230;
-                // allocation.height = height * ((int) zoom_slider.get_value () / 100);
-                // picture.allocate_size (allocation, -1);
-                // print ("W: %d H:%d\n", allocation.width, allocation.height);
+                var val = zoom_slider.get_value () / 100;
+                picture.width_request = (int) (picture.get_allocated_width () * val);
+                picture.height_request = (int) (picture.get_allocated_height () * val);
             }
+
+            // print ("W: %s\n", (picture.get_allocated_width () * val).to_string ());
+            // print ("H: %s\n", images_carousel.get_allocated_width ().to_string ());
         });
 
         var controls_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0) {
@@ -257,9 +251,10 @@ public class Album.PreviewPage : Adw.Bin {
 
     public void set_active (Album.ImageFlowBoxChild child) {
         for (var index = 0; index < images_carousel.n_pages; index++) {
-            viewport = (Gtk.Viewport) images_carousel.get_nth_page (index);
-            if (((Gtk.Picture) viewport.child).paintable == child.paintable) {
-                picture = (Gtk.Picture) viewport.child;
+            viewport = (Gtk.ScrolledWindow) images_carousel.get_nth_page (index);
+            var vw = (Gtk.Viewport) viewport.child;
+            if (((Gtk.Picture) vw.child).paintable == child.paintable) {
+                picture = (Gtk.Picture) vw.child;
                 images_carousel.scroll_to (viewport, false);
                 update_properties (child);
             }

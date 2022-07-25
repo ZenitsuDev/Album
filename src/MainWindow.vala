@@ -4,6 +4,7 @@ public class Album.MainWindow : Gtk.ApplicationWindow {
     public Gtk.MenuButton sort_button { get; set; }
     public TransitionStack transition_stack { get; set; }
     public Album.SettingPopover setting_popover { get; set; }
+    public Gtk.ComboBoxText mobile_folder_switcher { get; set; }
 
     public int requested_image_size { get; set; }
 
@@ -20,9 +21,15 @@ public class Album.MainWindow : Gtk.ApplicationWindow {
 
         preview_container = new Adw.Bin ();
 
-        var date_label = new Granite.HeaderLabel ("Album");
+        var title_label = new Granite.HeaderLabel ("Album");
 
         setting_popover = new Album.SettingPopover (this);
+
+        mobile_folder_switcher = new Gtk.ComboBoxText () {
+            visible = false,
+            hexpand = true
+        };
+        mobile_folder_switcher.add_css_class (Granite.STYLE_CLASS_FLAT);
 
         sort_button = new Gtk.MenuButton () {
             popover = setting_popover,
@@ -36,8 +43,9 @@ public class Album.MainWindow : Gtk.ApplicationWindow {
             show_title_buttons = true,
             valign = Gtk.Align.START,
             halign = Gtk.Align.FILL,
-            title_widget = date_label
+            title_widget = title_label
         };
+        images_header.pack_start (mobile_folder_switcher);
         images_header.pack_end (sort_button);
         images_header.add_css_class ("titlebar");
         images_header.add_css_class (Granite.STYLE_CLASS_FLAT);
@@ -85,7 +93,8 @@ public class Album.MainWindow : Gtk.ApplicationWindow {
         locations_header.add_css_class (Granite.STYLE_CLASS_DEFAULT_DECORATION);
 
         var locations = new Album.LocationsSideBar (images_stack) {
-            vexpand = true
+            vexpand = true,
+            alternative = mobile_folder_switcher
         };
 
         var add_button = new Gtk.Button.with_label ("Add a Folder") {
@@ -115,15 +124,21 @@ public class Album.MainWindow : Gtk.ApplicationWindow {
         leaflet.append (images_view);
         leaflet.visible_child = images_view;
 
-        leaflet.notify["folded"].connect (() => {
-            print ("%s\n", leaflet.folded.to_string ());
-        });
-
         transition_stack = new TransitionStack ();
         transition_stack.add_child (leaflet);
         transition_stack.add_child (preview_container);
 
         child = transition_stack;
+
+        leaflet.notify["folded"].connect (() => {
+            if (leaflet.folded) {
+                mobile_folder_switcher.visible = true;
+                title_label.visible = false;
+            } else {
+                mobile_folder_switcher.visible = false;
+                title_label.visible = true;
+            }
+        });
 
         var add_dialog = new Gtk.FileChooserNative ("Add a folder", this, Gtk.FileChooserAction.SELECT_FOLDER, "Add", "Cancel") {
             transient_for = this
