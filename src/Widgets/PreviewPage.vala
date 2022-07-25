@@ -35,6 +35,13 @@ public class Album.PreviewPage : Adw.Bin {
         };
         view_fullscreen.add_css_class (Granite.STYLE_CLASS_FLAT);
 
+        var mobile_view_info = new Gtk.Button () {
+            child = new Gtk.Image.from_icon_name ("dialog-information-symbolic"),
+            can_focus = false,
+            visible = false
+        };
+        mobile_view_info.add_css_class (Granite.STYLE_CLASS_FLAT);
+
         var preview_header = new Gtk.HeaderBar () {
             decoration_layout = "close:",
             title_widget = label,
@@ -43,6 +50,7 @@ public class Album.PreviewPage : Adw.Bin {
         };
         preview_header.pack_start (halt_button);
         preview_header.pack_end (view_fullscreen);
+        preview_header.pack_end (mobile_view_info);
         preview_header.add_css_class ("titlebar");
         preview_header.add_css_class (Granite.STYLE_CLASS_FLAT);
         preview_header.add_css_class (Granite.STYLE_CLASS_DEFAULT_DECORATION);
@@ -133,11 +141,19 @@ public class Album.PreviewPage : Adw.Bin {
         preview_view.append (controls_box);
         preview_view.add_css_class (Granite.STYLE_CLASS_VIEW);
 
+        var to_preview = new Gtk.Button () {
+            child = new Gtk.Image.from_icon_name ("go-previous-symbolic"),
+            can_focus = false,
+            visible = false
+        };
+        to_preview.add_css_class (Granite.STYLE_CLASS_FLAT);
+
         var meta_header = new Gtk.HeaderBar () {
             decoration_layout = ":maximize",
             title_widget = new Gtk.Label ("") { visible = false },
             valign = Gtk.Align.START
         };
+        meta_header.pack_start (to_preview);
         meta_header.add_css_class ("titlebar");
         meta_header.add_css_class (Granite.STYLE_CLASS_FLAT);
         meta_header.add_css_class (Granite.STYLE_CLASS_DEFAULT_DECORATION);
@@ -209,6 +225,18 @@ public class Album.PreviewPage : Adw.Bin {
         var key_controller = new Gtk.EventControllerKey ();
         add_controller (key_controller);
 
+        leaflet.notify["folded"].connect (() => {
+            if (leaflet.folded) {
+                view_fullscreen.visible = false;
+                mobile_view_info.visible = true;
+                to_preview.visible = true;
+            } else {
+                view_fullscreen.visible = true;
+                mobile_view_info.visible = false;
+                to_preview.visible = false;
+            }
+        });
+
         motion_controller.enter.connect (() => {
             back_revealer.reveal_child = true;
             next_revealer.reveal_child = true;
@@ -246,6 +274,14 @@ public class Album.PreviewPage : Adw.Bin {
                 var window = new Album.FullscreenViewer (picture.paintable);
                 window.present ();
             }
+        });
+
+        mobile_view_info.clicked.connect (() => {
+            leaflet.visible_child = meta_sidebar;
+        });
+
+        to_preview.clicked.connect (() => {
+            leaflet.visible_child = preview_view;
         });
     }
 
