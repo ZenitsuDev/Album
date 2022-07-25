@@ -229,10 +229,14 @@ public class Album.PreviewPage : Adw.Bin {
             if (leaflet.folded) {
                 view_fullscreen.visible = false;
                 mobile_view_info.visible = true;
+                back_revealer.visible = false;
+                next_revealer.visible = false;
                 to_preview.visible = true;
             } else {
                 view_fullscreen.visible = true;
                 mobile_view_info.visible = false;
+                back_revealer.visible = true;
+                next_revealer.visible = true;
                 to_preview.visible = false;
             }
         });
