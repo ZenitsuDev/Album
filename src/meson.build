@@ -7,7 +7,8 @@ sources = [
     'Widgets/TransitionStack.vala',
     'Widgets/PreviewPage.vala',
     'Widgets/LocationsSideBar.vala',
-    'Widgets/SettingPopover.vala'
+    'Widgets/SettingPopover.vala',
+    'Widgets/FullscreenViewer.vala'
 ]
 
 cc = meson.get_compiler('c')

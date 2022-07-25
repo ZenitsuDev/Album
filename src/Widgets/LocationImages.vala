@@ -178,7 +178,6 @@ public class Album.LocationImages : Granite.SettingsPage {
                 } else if (y < 0 && window.requested_image_size > 50) {
                     zoom (false);
                 }
-
                 return true;
             } else {
                 return false;

@@ -10,6 +10,7 @@ public class Album.PreviewPage : Adw.Bin {
     private Gtk.Label meta_date;
     private Gtk.Label meta_filepath;
     private Gtk.Scale zoom_slider;
+    private Gtk.Viewport viewport;
 
     private Gtk.Button go_back;
     private Gtk.Button go_next;
@@ -28,6 +29,12 @@ public class Album.PreviewPage : Adw.Bin {
         var lbl = (Gtk.Label) label.get_last_child ();
         lbl.ellipsize = Pango.EllipsizeMode.START;
 
+        var view_fullscreen = new Gtk.Button () {
+            child = new Gtk.Image.from_icon_name ("video-display-symbolic"),
+            can_focus = false
+        };
+        view_fullscreen.add_css_class (Granite.STYLE_CLASS_FLAT);
+
         var preview_header = new Gtk.HeaderBar () {
             decoration_layout = "close:",
             title_widget = label,
@@ -35,6 +42,7 @@ public class Album.PreviewPage : Adw.Bin {
             valign = Gtk.Align.START
         };
         preview_header.pack_start (halt_button);
+        preview_header.pack_end (view_fullscreen);
         preview_header.add_css_class ("titlebar");
         preview_header.add_css_class (Granite.STYLE_CLASS_FLAT);
         preview_header.add_css_class (Granite.STYLE_CLASS_DEFAULT_DECORATION);
@@ -99,13 +107,22 @@ public class Album.PreviewPage : Adw.Bin {
         zoom_slider.add_mark (100, Gtk.PositionType.TOP, "<b>100</b>");
         zoom_slider.add_mark (150, Gtk.PositionType.TOP, "150 %");
 
-        var grab_foci = new SimpleAction ("app.focus_slider", null);
-        grab_foci.activate.connect (() => {
-            print ("HAHAHA");
-            zoom_slider.grab_focus ();
+        zoom_slider.value_changed.connect (() => {
+            if (picture != null) {
+                // picture.width_request = picture.width_request * (zoom_slider.get_value () / 100);
+                // picture.width_request = picture.width_request * (zoom_slider.get_value () / 100);
+                // var width = picture.get_allocated_width ();
+                // var height = picture.get_allocated_height ();
+                // Gtk.Allocation allocation;
+                // picture.get_allocation (out allocation);
+                // allocation.width = width * ((int) zoom_slider.get_value () / 100);
+                // allocation.width = 300;
+                // allocation.height = 230;
+                // allocation.height = height * ((int) zoom_slider.get_value () / 100);
+                // picture.allocate_size (allocation, -1);
+                // print ("W: %d H:%d\n", allocation.width, allocation.height);
+            }
         });
-
-        add_binding_action (Gdk.Key.plus, Gdk.ModifierType.CONTROL_MASK, "focus_slider", null);
 
         var controls_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0) {
             margin_start = 10,
@@ -195,6 +212,9 @@ public class Album.PreviewPage : Adw.Bin {
 
         child = leaflet;
 
+        var key_controller = new Gtk.EventControllerKey ();
+        add_controller (key_controller);
+
         motion_controller.enter.connect (() => {
             back_revealer.reveal_child = true;
             next_revealer.reveal_child = true;
@@ -213,13 +233,31 @@ public class Album.PreviewPage : Adw.Bin {
             progress_carousel (true);
         });
 
-        this.map.connect (handle_navigation_button_sensitivity);
+        this.map.connect (() => {
+            handle_navigation_button_sensitivity ();
+        });
+
+        key_controller.key_pressed.connect ((keyval) => {
+            if (keyval == 65363 && go_next.sensitive) {
+                progress_carousel (true);
+            } else if (keyval == 65361 && go_back.sensitive) {
+                progress_carousel (false);
+            }
+        });
+
         images_carousel.page_changed.connect (handle_navigation_button_sensitivity);
+
+        view_fullscreen.clicked.connect (() => {
+            if (picture != null) {
+                var window = new Album.FullscreenViewer (picture.paintable);
+                window.present ();
+            }
+        });
     }
 
     public void set_active (Album.ImageFlowBoxChild child) {
         for (var index = 0; index < images_carousel.n_pages; index++) {
-            var viewport = (Gtk.Viewport) images_carousel.get_nth_page (index);
+            viewport = (Gtk.Viewport) images_carousel.get_nth_page (index);
             if (((Gtk.Picture) viewport.child).paintable == child.paintable) {
                 picture = (Gtk.Picture) viewport.child;
                 images_carousel.scroll_to (viewport, false);
