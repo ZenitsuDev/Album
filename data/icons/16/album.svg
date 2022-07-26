@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16" viewBox="0 0 16 16" version="1.1">
+<defs>
+<linearGradient id="linear0" gradientUnits="userSpaceOnUse" x1="98.062469" y1="436.322266" x2="383.303589" y2="219.470383" gradientTransform="matrix(0.970048,0,0,0.966722,7.439504,8.000476)">
+<stop offset="0" style="stop-color:rgb(21.176471%,53.725493%,90.196079%);stop-opacity:1;"/>
+<stop offset="1" style="stop-color:rgb(15.686275%,73.725492%,63.921571%);stop-opacity:1;"/>
+</linearGradient>
+<image id="image8" width="16" height="16" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAA5UlEQVQ4je2QPYqDUBSFD5n8QfYQLFyAG8gGBizSZCGCrRuwyzKsxM7WKgxT+CQiRIytVcAnGMiDd9MkEl7GISQp85XnnnPu5QIfXubrrT7HcZae5zkARldN1/UJY8zPsiwwTXP+Z9CyrO88zwMiEkREVVVtbNteaJo2TZLEpwtt2+5d113dFXDOc1IoiuKHMRaoupTyGIbhGsC4K2iaZndrqut6G8dxpIaVBVH3G875Tpmf/gsTEQkhDgAmg55/jnr0WwgA9RU8zLWAni0YAkCapr+GYczUoZSy98KyLBkA8ezijjNXHNuYVGrFdgAAAABJRU5ErkJggg=="/>
+<image id="image14" width="16" height="16" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAAWElEQVQ4je3OIQqAUBRE0ftsgmCw2Vyg6zC4CZvFdYkLEOu1GMT0fzAInjQwMAy8TW3UUR3U+tlHwsAE7EAJHBHR3/si4UQFrMB25Txqpy7qrLbZA7/fN5yIVSKUTx3BCgAAAABJRU5ErkJggg=="/>
+<image id="image20" width="16" height="16" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAARElEQVQ4jWNgoBAwEqGGl4GBgQfK/sTAwPCVVEukcLAZGBgYGJiIMOA/DjYDAwMDAwsRBvxiYGCQhLK/E6F+FIyCoQgAKB8GRMbxsZsAAAAASUVORK5CYII="/>
+</defs>
+<g id="surface1">
+<path style="fill-rule:nonzero;fill:url(#linear0);stroke-width:0.916091;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(0%,0%,0%);stroke-opacity:1;stroke-miterlimit:4;" d="M 53.875 13.875 L 459 13.875 C 482.125 13.875 500.875 32.625 500.875 55.875 L 500.875 457 C 500.875 480.125 482.125 498.875 459 498.875 L 53.875 498.875 C 30.75 498.875 12 480.125 12 457 L 12 55.875 C 12 32.625 30.75 13.875 53.875 13.875 Z M 53.875 13.875 " transform="matrix(0.03125,0,0,0.03125,0,0)"/>
+<use xlink:href="#image8"/>
+<use xlink:href="#image14"/>
+<use xlink:href="#image20"/>
+</g>
+</svg>

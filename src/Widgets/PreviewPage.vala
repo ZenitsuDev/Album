@@ -10,7 +10,7 @@ public class Album.PreviewPage : Adw.Bin {
     private Gtk.Label meta_date;
     private Gtk.Label meta_filepath;
     private Gtk.Scale zoom_slider;
-    private Gtk.ScrolledWindow viewport;
+    private Gtk.ScrolledWindow scrolled;
 
     private Gtk.Button go_back;
     private Gtk.Button go_next;
@@ -118,12 +118,9 @@ public class Album.PreviewPage : Adw.Bin {
         zoom_slider.adjustment.notify["value"].connect (() => {
             if (picture != null) {
                 var val = zoom_slider.get_value () / 100;
-                picture.width_request = (int) (picture.get_allocated_width () * val);
-                picture.height_request = (int) (picture.get_allocated_height () * val);
+                picture.width_request = (int) (buttons_overlay.get_allocated_width () * val);
+                picture.height_request = (int) (buttons_overlay.get_allocated_height () * val);
             }
-
-            // print ("W: %s\n", (picture.get_allocated_width () * val).to_string ());
-            // print ("H: %s\n", images_carousel.get_allocated_width ().to_string ());
         });
 
         var controls_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0) {
@@ -227,28 +224,22 @@ public class Album.PreviewPage : Adw.Bin {
 
         leaflet.notify["folded"].connect (() => {
             if (leaflet.folded) {
-                view_fullscreen.visible = false;
-                mobile_view_info.visible = true;
-                back_revealer.visible = false;
-                next_revealer.visible = false;
-                to_preview.visible = true;
+                view_fullscreen.visible = back_revealer.visible = next_revealer.visible =
+                preview_halt_box.get_last_child ().visible = false;
+                mobile_view_info.visible = to_preview.visible = true;
             } else {
-                view_fullscreen.visible = true;
-                mobile_view_info.visible = false;
-                back_revealer.visible = true;
-                next_revealer.visible = true;
-                to_preview.visible = false;
+                view_fullscreen.visible = back_revealer.visible = next_revealer.visible =
+                preview_halt_box.get_last_child ().visible = true;
+                mobile_view_info.visible = to_preview.visible = false;
             }
         });
 
         motion_controller.enter.connect (() => {
-            back_revealer.reveal_child = true;
-            next_revealer.reveal_child = true;
+            back_revealer.reveal_child = next_revealer.reveal_child = true;
         });
 
         motion_controller.leave.connect (() => {
-            back_revealer.reveal_child = false;
-            next_revealer.reveal_child = false;
+            back_revealer.reveal_child = next_revealer.reveal_child = false;
         });
 
         go_back.clicked.connect (() => {
@@ -291,11 +282,11 @@ public class Album.PreviewPage : Adw.Bin {
 
     public void set_active (Album.ImageFlowBoxChild child) {
         for (var index = 0; index < images_carousel.n_pages; index++) {
-            viewport = (Gtk.ScrolledWindow) images_carousel.get_nth_page (index);
-            var vw = (Gtk.Viewport) viewport.child;
-            if (((Gtk.Picture) vw.child).paintable == child.paintable) {
-                picture = (Gtk.Picture) vw.child;
-                images_carousel.scroll_to (viewport, false);
+            scrolled = (Gtk.ScrolledWindow) images_carousel.get_nth_page (index);
+            var viewport = (Gtk.Viewport) scrolled.child;
+            if (((Gtk.Picture) viewport.child).paintable == child.paintable) {
+                picture = (Gtk.Picture) viewport.child;
+                images_carousel.scroll_to (scrolled, false);
                 update_properties (child);
             }
         }
@@ -315,8 +306,7 @@ public class Album.PreviewPage : Adw.Bin {
         } else if (images_carousel.position >= images_carousel.n_pages - 1) {
             go_next.sensitive = false;
         } else {
-            go_back.sensitive = true;
-            go_next.sensitive = true;
+            go_back.sensitive = go_next.sensitive = true;
         }
     }
 

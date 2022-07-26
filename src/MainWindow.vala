@@ -16,7 +16,7 @@ public class Album.MainWindow : Gtk.ApplicationWindow {
         default_width = 960;
         default_height = 640;
         titlebar = new Gtk.Label ("") { visible = false };
-        icon_name = "io.elementary.photos";
+        icon_name = "com.zendev.album";
         requested_image_size = Album.Application.settings.get_int ("image-size");
 
         preview_container = new Adw.Bin ();
