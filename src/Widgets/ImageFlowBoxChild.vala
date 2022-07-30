@@ -18,9 +18,9 @@ public class Album.ImageFlowBoxChild : Gtk.FlowBoxChild {
     construct {
         var image = new Gtk.Image () {
             hexpand = true,
-            vexpand = true
+            vexpand = true,
         };
-        image.paintable = paintable = new ThumbnailPaintable (file, file.get_path (), image);
+        image.paintable = paintable = new ThumbnailPaintable (file, file.get_path (), this.scale_factor);
 
         width_request = 100;
         height_request = 100;
@@ -32,7 +32,7 @@ public class Album.ImageFlowBoxChild : Gtk.FlowBoxChild {
 }
 
 public class ThumbnailPaintable : Object, Gdk.Paintable {
-    private Gtk.Widget widget;
+    private int scale_factor;
     private File file;
     private string tag;
     private int full_width;
@@ -47,21 +47,21 @@ public class ThumbnailPaintable : Object, Gdk.Paintable {
     private static TextureLoader loader = new TextureLoader ();
     public float scale { get; set; default = 1; }
 
-    public ThumbnailPaintable (File file, string tag, Gtk.Widget widget) {
+    public ThumbnailPaintable (File file, string tag, int scale_factor) {
         this.file = file;
         this.tag = tag.replace ("/", "-");
-        this.widget = widget;
+        this.scale_factor = scale_factor;
 
         Gdk.Pixbuf.get_file_info (file.get_path (), out full_width, out full_height);
 
         notify["scale"].connect (() => {
-            invalidate_contents ();
+            invalidate_size ();
         });
     }
 
     private void snapshot (Gdk.Snapshot gdk_snapshot, double width, double height) {
-        int w = (int) Math.ceil (width) * widget.scale_factor;
-        int h = (int) Math.ceil (height) * widget.scale_factor;
+        int w = (int) Math.ceil (width) * scale_factor;
+        int h = (int) Math.ceil (height) * scale_factor;
 
         if ((w != last_width || h != last_height) && cache != null) {
             previous_cache = cache;

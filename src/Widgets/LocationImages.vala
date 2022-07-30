@@ -268,7 +268,8 @@ public class Album.LocationImages : Granite.SettingsPage {
             halign = Gtk.Align.CENTER,
             valign = Gtk.Align.CENTER,
             hexpand = true,
-            vexpand = true
+            vexpand = true,
+            keep_aspect_ratio = true
         };
 
         var scrolled = new Gtk.ScrolledWindow () {

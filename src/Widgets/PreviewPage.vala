@@ -105,15 +105,15 @@ public class Album.PreviewPage : Adw.Bin {
         buttons_overlay.add_overlay (next_revealer);
         buttons_overlay.add_controller (motion_controller);
 
-        zoom_slider = new Gtk.Scale.with_range (Gtk.Orientation.HORIZONTAL, 2, 200, 2) {
+        zoom_slider = new Gtk.Scale.with_range (Gtk.Orientation.HORIZONTAL, 100, 300, 2) {
             width_request = 250,
             hexpand = true,
             halign = Gtk.Align.CENTER
         };
         zoom_slider.set_value (100);
-        zoom_slider.add_mark (50, Gtk.PositionType.TOP, "50 %");
-        zoom_slider.add_mark (100, Gtk.PositionType.TOP, "<b>100</b>");
         zoom_slider.add_mark (150, Gtk.PositionType.TOP, "150 %");
+        zoom_slider.add_mark (200, Gtk.PositionType.TOP, "<b>200</b>");
+        zoom_slider.add_mark (250, Gtk.PositionType.TOP, "250 %");
 
         zoom_slider.adjustment.notify["value"].connect (() => {
             if (picture != null) {
