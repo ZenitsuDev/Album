@@ -117,9 +117,8 @@ public class Album.PreviewPage : Adw.Bin {
 
         zoom_slider.adjustment.notify["value"].connect (() => {
             if (picture != null) {
-                var val = zoom_slider.get_value () / 100;
-                picture.width_request = (int) (buttons_overlay.get_allocated_width () * val);
-                picture.height_request = (int) (buttons_overlay.get_allocated_height () * val);
+                var val = (float) zoom_slider.get_value () / 100;
+                ((ThumbnailPaintable) picture.paintable).scale = val;
             }
         });
 
