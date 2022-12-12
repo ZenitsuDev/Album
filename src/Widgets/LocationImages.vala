@@ -3,7 +3,7 @@ public class Album.LocationImages : Granite.SettingsPage {
     public int index { get; construct; }
     public Album.MainWindow window { get; construct; }
 
-    public Album.PreviewPage preview_page { get; set; }
+    public Album.PreviewView preview_page { get; set; }
     public Album.ImageFlowBoxChild closeable_child { get; set; }
     public Album.SegregatedFlowbox active_segfb { get; set; }
 
@@ -130,10 +130,10 @@ public class Album.LocationImages : Granite.SettingsPage {
             box.invalidate_filter ();
         });
 
-        preview_page = new Album.PreviewPage ();
+        preview_page = new Album.PreviewView ();
 
-        preview_page.images_carousel.page_changed.connect ((carousel, idx) => {
-            var scrolled = (Gtk.ScrolledWindow) preview_page.images_carousel.get_nth_page (idx);
+        preview_page.preview_scroller.page_changed.connect ((carousel, idx) => {
+            var scrolled = preview_page.preview_scroller.get_page (idx);
             var viewport = (Gtk.Viewport) scrolled.child;
             preview_page.picture = (Gtk.Picture) viewport.child;
 
@@ -279,7 +279,7 @@ public class Album.LocationImages : Granite.SettingsPage {
         };
 
         var position = derive_position (groupable_child);
-        preview_page.images_carousel.insert (scrolled, position);
+        preview_page.preview_scroller.insert_page (scrolled, position);
     }
 
     private int derive_position (Album.ImageFlowBoxChild child) {

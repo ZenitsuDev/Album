@@ -1,7 +1,7 @@
-public class Album.FullscreenViewer : Gtk.Window {
+public class Album.FullScreenViewer : Gtk.Window {
     public Gdk.Paintable paintable { get; construct; }
 
-    public FullscreenViewer (Gdk.Paintable paintable) {
+    public FullScreenViewer (Gdk.Paintable paintable) {
         Object (paintable: paintable);
     }
 

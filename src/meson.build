@@ -5,10 +5,14 @@ sources = [
     'Widgets/SegregatedFlowbox.vala',
     'Widgets/ImageFlowBoxChild.vala',
     'Widgets/TransitionStack.vala',
-    'Widgets/PreviewPage.vala',
     'Widgets/LocationsSideBar.vala',
     'Widgets/SettingPopover.vala',
-    'Widgets/FullscreenViewer.vala'
+
+    'Widgets/PreviewView/PreviewView.vala',
+    'Widgets/PreviewView/PreviewHeader.vala',
+    'Widgets/PreviewView/PreviewScroller.vala',
+
+    'Widgets/FullScreenView/FullScreenViewer.vala'
 ]
 
 cc = meson.get_compiler('c')

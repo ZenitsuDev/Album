@@ -94,9 +94,9 @@ public class Album.SegregatedFlowbox : Gtk.ListBoxRow {
 
         can_close.connect ((condition) => {
             if (condition) {
-                location_images.preview_page.halt_button.clicked.connect (location_images.halt_preview);
+                location_images.preview_page.preview_header.request_halt_preview.connect (location_images.halt_preview);
             } else {
-                location_images.preview_page.halt_button.clicked.disconnect (location_images.halt_preview);
+                location_images.preview_page.preview_header.request_halt_preview.disconnect (location_images.halt_preview);
             }
         });
     }
