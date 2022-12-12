@@ -151,7 +151,7 @@ public class Album.LocationImages : Granite.SettingsPage {
             closeable_child = (Album.ImageFlowBoxChild) 
                 active_segfb.main_widget.get_child_at_index (new_index);
 
-            preview_page.update_properties (closeable_child);
+            preview_page.metadata_sidebar.update_metadata (closeable_child);
         });
 
         var file = File.new_for_path (folder_name);

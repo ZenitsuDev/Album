@@ -1,19 +1,11 @@
 public class Album.PreviewView : Adw.Bin {
-    // public Adw.Carousel images_carousel { get; set; }
     public Gtk.Picture picture { get; set; }
     public Album.PreviewHeader preview_header { get; set; }
     public Album.PreviewScroller preview_scroller { get; set; }
+    public Album.MetaDataSideBar metadata_sidebar { get; set; }
 
-    private Gtk.Label meta_title;
-    private Gtk.Label meta_size;
-    private Gtk.Label meta_time;
-    private Gtk.Label meta_date;
-    private Gtk.Label meta_filepath;
     private Gtk.Scale zoom_slider;
     private Gtk.ScrolledWindow scrolled;
-
-    // private Gtk.Button go_back;
-    // private Gtk.Button go_next;
 
     construct {
         preview_header = new Album.PreviewHeader ();
@@ -48,80 +40,11 @@ public class Album.PreviewView : Adw.Bin {
 
         var preview_view = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
         preview_view.append (preview_header);
-        // preview_view.append (buttons_overlay);
         preview_view.append (preview_scroller);
         preview_view.append (controls_box);
         preview_view.add_css_class (Granite.STYLE_CLASS_VIEW);
 
-        var to_preview = new Gtk.Button () {
-            child = new Gtk.Image.from_icon_name ("go-previous-symbolic"),
-            can_focus = false,
-            visible = false
-        };
-        to_preview.add_css_class (Granite.STYLE_CLASS_FLAT);
-
-        var meta_header = new Gtk.HeaderBar () {
-            decoration_layout = ":maximize",
-            title_widget = new Gtk.Label ("") { visible = false },
-            valign = Gtk.Align.START
-        };
-        meta_header.pack_start (to_preview);
-        meta_header.add_css_class ("titlebar");
-        meta_header.add_css_class (Granite.STYLE_CLASS_FLAT);
-        meta_header.add_css_class (Granite.STYLE_CLASS_DEFAULT_DECORATION);
-
-        meta_title = new Gtk.Label ("") {
-            wrap = true,
-            wrap_mode = Pango.WrapMode.CHAR,
-            max_width_chars = 10,
-            margin_top = 10,
-            margin_bottom = 20
-        };
-        meta_title.add_css_class (Granite.STYLE_CLASS_H2_LABEL);
-
-        meta_size = new Gtk.Label ("") {
-            xalign = -1,
-            use_markup = true
-        };
-
-        meta_time = new Gtk.Label ("") {
-            xalign = -1,
-            use_markup = true
-        };
-
-        meta_date = new Gtk.Label ("") {
-            xalign = -1,
-            use_markup = true
-        };
-
-        meta_filepath = new Gtk.Label ("") {
-            xalign = -1,
-            use_markup = true,
-            wrap = true,
-            wrap_mode = Pango.WrapMode.CHAR,
-            max_width_chars = 15,
-            margin_top = 20
-        };
-
-        var meta_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0) {
-            vexpand = true,
-            margin_start = 6,
-            margin_end = 6,
-            margin_top = 6,
-            margin_bottom = 6,
-        };
-        meta_box.append (meta_title);
-        meta_box.append (meta_date);
-        meta_box.append (meta_time);
-        meta_box.append (meta_filepath);
-        meta_box.append (meta_size);
-
-        var meta_sidebar = new Gtk.Box (Gtk.Orientation.VERTICAL, 0) {
-            width_request = 250
-        };
-        meta_sidebar.append (meta_header);
-        meta_sidebar.append (meta_box);
-        meta_sidebar.add_css_class (Granite.STYLE_CLASS_SIDEBAR);
+        metadata_sidebar = new Album.MetaDataSideBar ();
 
         var leaflet = new Adw.Leaflet () {
             transition_type = Adw.LeafletTransitionType.SLIDE,
@@ -130,17 +53,17 @@ public class Album.PreviewView : Adw.Bin {
         };
         leaflet.append (preview_view);
         leaflet.append (new Gtk.Separator (Gtk.Orientation.VERTICAL));
-        leaflet.append (meta_sidebar);
+        leaflet.append (metadata_sidebar);
 
         child = leaflet;
 
         leaflet.notify["folded"].connect (() => {
             if (leaflet.folded) {
                 preview_scroller.buttons_visible = preview_header.parent_folded = false;
-                to_preview.visible = true;
+                metadata_sidebar.shift_to_preview_btn_visible = true;
             } else {
                 preview_scroller.buttons_visible = preview_header.parent_folded = true;
-                to_preview.visible = false;
+                metadata_sidebar.shift_to_preview_btn_visible = false;
             }
         });
 
@@ -152,10 +75,10 @@ public class Album.PreviewView : Adw.Bin {
         });
 
         preview_header.request_view_sidebar.connect (() => {
-            leaflet.visible_child = meta_sidebar;
+            leaflet.visible_child = metadata_sidebar;
         });
 
-        to_preview.clicked.connect (() => {
+        metadata_sidebar.request_show_preview.connect (() => {
             leaflet.visible_child = preview_view;
         });
     }
@@ -167,16 +90,8 @@ public class Album.PreviewView : Adw.Bin {
             if (((Gtk.Picture) viewport.child).paintable == child.paintable) {
                 picture = (Gtk.Picture) viewport.child;
                 preview_scroller.scroll_to (scrolled, false);
-                update_properties (child);
+                metadata_sidebar.update_metadata (child);
             }
         }
-    }
-
-    public void update_properties (Album.ImageFlowBoxChild child) {
-        meta_title.label = child.file.get_basename ();
-        meta_time.label = "<b>Time modified: </b>%s".printf (child.time);
-        meta_date.label = "<b>Date modified: </b>%s".printf (child.date);
-        meta_size.label = "<b>File Size: </b>%s".printf (child.size_data);
-        meta_filepath.label = "<b>Path: </b>%s".printf (child.file.get_path ());
     }
 }
