@@ -253,6 +253,10 @@ public class Album.PreviewPage : Adw.Bin {
             handle_navigation_button_sensitivity ();
         });
 
+        this.unmap.connect (() => {
+            go_back.sensitive = go_next.sensitive = true;
+        });
+
         key_controller.key_pressed.connect ((keyval) => {
             if (keyval == 65363 && go_next.sensitive) {
                 progress_carousel (true);

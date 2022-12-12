@@ -8,6 +8,14 @@ public class Album.MainWindow : Gtk.ApplicationWindow {
 
     public int requested_image_size { get; set; }
 
+    private string[] default_folders = {
+        "",
+        "/Pictures",
+        "/Pictures/Screenshots",
+        "/Downloads/",
+        "/.local/share/Trash/files"
+    };
+
     public MainWindow (Album.Application app) {
         Object (application: app);
     }
@@ -60,11 +68,12 @@ public class Album.MainWindow : Gtk.ApplicationWindow {
         var folders = Album.Application.settings.get_strv ("sidebar-folders");
         if (folders.length == 0) {
             var home_folder = Environment.get_variable ("HOME");
-            folders += home_folder;
-            folders += home_folder + "/Pictures";
-            folders += home_folder + "/Pictures/Screenshots/";
-            folders += home_folder + "/Downloads";
-            folders += home_folder + "/.local/share/Trash/files";
+            foreach (var defaults in default_folders) {
+                var file = File.new_for_path (home_folder + defaults);
+                if (file.query_exists ()) {
+                    folders += home_folder + defaults;
+                }
+            }
 
             Album.Application.settings.set_strv ("sidebar-folders", folders);
         }
