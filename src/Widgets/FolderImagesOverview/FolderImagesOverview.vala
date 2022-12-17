@@ -62,27 +62,7 @@ public class Album.FolderImagesOverview : Granite.SettingsPage {
 
         date_sorting_box = new Album.DateSortingBox (window);
 
-        preview_page = new Album.PreviewView ();
-
-        preview_page.preview_scroller.page_changed.connect ((carousel, idx) => {
-            var scrolled = preview_page.preview_scroller.get_page (idx);
-            var viewport = (Gtk.Viewport) scrolled.child;
-            preview_page.picture = (Gtk.Picture) viewport.child;
-
-            var clicked_child_index = (int) idx;
-            var checked_index = 0;
-
-            while (date_sorting_box.get_segfb (checked_index).children_count - 1 < clicked_child_index) {
-
-                clicked_child_index = clicked_child_index - date_sorting_box.get_segfb (checked_index).children_count;
-                checked_index++;
-            }
-
-            active_segfb = date_sorting_box.get_segfb (checked_index);
-            closeable_child = (Album.ImageFlowBoxChild) active_segfb.main_widget.get_child_at_index (clicked_child_index);
-
-            preview_page.metadata_sidebar.update_metadata (closeable_child);
-        });
+        preview_page = new Album.PreviewView (this);
 
 	    var keyboard_resize = new Gtk.EventControllerKey ();
 	    var scrolled = new Gtk.ScrolledWindow () {
@@ -139,7 +119,7 @@ public class Album.FolderImagesOverview : Granite.SettingsPage {
     }
 
     public void halt_preview () {
-        window.transition_stack.add_shared_element (preview_page.picture, closeable_child.child);
+        window.transition_stack.add_shared_element (preview_page.active_picture, closeable_child.child);
         window.transition_stack.navigate (window.leaflet);
 
         active_segfb.can_close = false;
@@ -216,7 +196,7 @@ public class Album.FolderImagesOverview : Granite.SettingsPage {
         int item_index = 0;
         for (var index = 0; index < segfb_index; index++) {
             var prev_segfb = date_sorting_box.get_segfb (index);
-            item_index += (int) prev_segfb.main_widget.observe_children ().get_n_items ();
+            item_index += (int) prev_segfb.children_count;
         }
 
         return item_index + child.get_index ();

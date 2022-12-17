@@ -20,9 +20,9 @@ public class Album.Zoom : Gtk.Widget {
         zoom_slider.add_mark (250, Gtk.PositionType.TOP, "250 %");
 
         zoom_slider.adjustment.notify["value"].connect (() => {
-            if (preview_view.picture != null) {
+            if (preview_view.active_picture != null) {
                 var val = (float) zoom_slider.get_value () / 100;
-                ((ThumbnailPaintable) preview_view.picture.paintable).scale = val;
+                ((ThumbnailPaintable) preview_view.active_picture.paintable).scale = val;
             }
         });
         hexpand = true;

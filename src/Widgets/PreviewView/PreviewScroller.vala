@@ -7,7 +7,7 @@ public class Album.PreviewScroller : Gtk.Widget {
 
     public Album.PreviewView preview_view { get; construct; }
 
-    public signal void page_changed (Adw.Carousel carousel, uint index);
+    public signal void active_changed (Adw.Carousel carousel, uint index);
 
     public PreviewScroller (Album.PreviewView view) {
         Object (preview_view: view);
@@ -122,7 +122,7 @@ public class Album.PreviewScroller : Gtk.Widget {
         });
 
         images_carousel.page_changed.connect ((car, idx) => {
-            page_changed (car, idx);
+            active_changed (car, idx);
         });
     }
 
