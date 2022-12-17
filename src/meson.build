@@ -1,14 +1,26 @@
 sources = [
     'Application.vala',
     'MainWindow.vala',
-    'Widgets/LocationImages.vala',
     'Widgets/SegregatedFlowbox.vala',
     'Widgets/ImageFlowBoxChild.vala',
     'Widgets/TransitionStack.vala',
-    'Widgets/PreviewPage.vala',
     'Widgets/LocationsSideBar.vala',
     'Widgets/SettingPopover.vala',
-    'Widgets/FullscreenViewer.vala'
+
+    'Widgets/FolderImagesOverview/DateSortingBox.vala',
+    'Widgets/FolderImagesOverview/FolderImagesOverview.vala',
+
+    'Widgets/PreviewView/PreviewView.vala',
+    'Widgets/PreviewView/PreviewHeader.vala',
+    'Widgets/PreviewView/PreviewScroller.vala',
+
+    'Widgets/PreviewView/MetaDataBox.vala',
+    'Widgets/PreviewView/MetaDataSideBar.vala',
+
+    'Widgets/PreviewView/Controls/ControlsBox.vala',
+    'Widgets/PreviewView/Controls/Zoom.vala',
+
+    'Widgets/FullScreenView/FullScreenViewer.vala'
 ]
 
 cc = meson.get_compiler('c')
