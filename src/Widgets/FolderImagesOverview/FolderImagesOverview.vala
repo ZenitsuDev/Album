@@ -64,12 +64,17 @@ public class Album.FolderImagesOverview : Granite.SettingsPage {
 
         preview_page = new Album.PreviewView (this);
 
-	    var keyboard_resize = new Gtk.EventControllerKey ();
 	    var scrolled = new Gtk.ScrolledWindow () {
 	        child = date_sorting_box,
 	        hexpand = true,
 	        vexpand = true
 	    };
+
+	    child = scrolled;
+        hexpand = true;
+        vexpand = true;
+
+        var keyboard_resize = new Gtk.EventControllerKey ();
 	    scrolled.add_controller (keyboard_resize);
 
 	    this.map.connect (() => {
@@ -80,11 +85,11 @@ public class Album.FolderImagesOverview : Granite.SettingsPage {
 	    var controller1 = (Gtk.EventControllerScroll) scrolled.observe_controllers ().get_item (2);
 	    controller1.scroll.connect ((event, x, y) => {
 	        var state = event.get_current_event_state ();
-            if (state.to_string () == "GDK_CONTROL_MASK") {
+            if (state == Gdk.ModifierType.CONTROL_MASK) {
                 if (y > 0 && window.requested_image_size < 200) {
-                    zoom (true);
+                    enlarge_icons (true);
                 } else if (y < 0 && window.requested_image_size > 50) {
-                    zoom (false);
+                    enlarge_icons (false);
                 }
                 return true;
             } else {
@@ -93,21 +98,17 @@ public class Album.FolderImagesOverview : Granite.SettingsPage {
 	    });
 
 	    keyboard_resize.key_pressed.connect ((keyval, keycode, mod) => {
-	        if (mod.to_string () == "GDK_CONTROL_MASK") {
-	            if (keyval == 65451 && window.requested_image_size < 200) {
-	                zoom (true);
-	            } else if (keyval == 65453 && window.requested_image_size > 50){
-	                zoom (false);
+	        if (mod == Gdk.ModifierType.CONTROL_MASK) {
+	            if (Gdk.keyval_name (keyval) == "equal" && window.requested_image_size < 200) {
+	                enlarge_icons (true);
+	            } else if (Gdk.keyval_name (keyval) == "minus" && window.requested_image_size > 50){
+	                enlarge_icons (false);
 	            }
 	        }
 	    });
-
-        child = scrolled;
-        hexpand = true;
-        vexpand = true;
     }
 
-    private void zoom (bool val) {
+    private void enlarge_icons (bool val) {
         if (val) {
             window.requested_image_size = window.requested_image_size + 5;
         } else {
