@@ -215,7 +215,7 @@ public class Album.LocationImages : Granite.SettingsPage {
         window.transition_stack.add_shared_element (preview_page.picture, closeable_child.child);
         window.transition_stack.navigate (window.leaflet);
 
-        active_segfb.can_close (false);
+        active_segfb.can_close = false;
     }
 
     private async void load_images (File folder) {

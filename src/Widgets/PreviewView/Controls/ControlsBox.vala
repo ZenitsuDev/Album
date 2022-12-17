@@ -4,11 +4,6 @@ public class Album.ControlsBox : Gtk.Box {
         Object (
             orientation: Gtk.Orientation.HORIZONTAL,
             spacing: 0,
-            margin_start: 10,
-            margin_end: 10,
-            margin_top: 10,
-            margin_bottom: 10,
-            hexpand: true,
             preview_view: preview_view
         );
     }
@@ -16,5 +11,11 @@ public class Album.ControlsBox : Gtk.Box {
     construct {
         var zoom_control = new Album.Zoom (preview_view);
         append (zoom_control);
+
+        margin_start = 10;
+        margin_end = 10;
+        margin_top = 10;
+        margin_bottom = 10;
+        hexpand = true;
     }
 }

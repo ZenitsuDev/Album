@@ -7,8 +7,7 @@ public class Album.SegregatedFlowbox : Gtk.ListBoxRow {
     public int index { get; set; }
     public int children_count { get; set; }
     public string header { get; set; }
-
-    public signal void can_close (bool condition);
+    private bool _can_close;
 
     private string[] weekdays = {
         "Monday", "Tuesday", "Wednesday",
@@ -21,6 +20,20 @@ public class Album.SegregatedFlowbox : Gtk.ListBoxRow {
             window: window,
             location_images: location_images
         );
+    }
+
+    public bool can_close {
+        private get {
+            return _can_close;
+        } set {
+            if (value) {
+                location_images.preview_page.preview_header.request_halt_preview.connect (location_images.halt_preview);
+            } else {
+                location_images.preview_page.preview_header.request_halt_preview.disconnect (location_images.halt_preview);
+            }
+
+            _can_close = value;
+        }
     }
 
     construct {
@@ -84,20 +97,12 @@ public class Album.SegregatedFlowbox : Gtk.ListBoxRow {
             var child = (Album.ImageFlowBoxChild) chil;
             index = child.get_index ();
 
-            location_images.preview_page.set_active (child);
+            location_images.preview_page.active = child;
 
             window.transition_stack.add_shared_element (child.child, location_images.preview_page.picture);
             window.transition_stack.navigate (window.preview_container);
 
-            can_close (true);
-        });
-
-        can_close.connect ((condition) => {
-            if (condition) {
-                location_images.preview_page.preview_header.request_halt_preview.connect (location_images.halt_preview);
-            } else {
-                location_images.preview_page.preview_header.request_halt_preview.disconnect (location_images.halt_preview);
-            }
+            can_close = true;
         });
     }
 

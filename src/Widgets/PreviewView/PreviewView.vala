@@ -4,8 +4,6 @@ public class Album.PreviewView : Adw.Bin {
     public Album.PreviewScroller preview_scroller { get; set; }
     public Album.MetaDataSideBar metadata_sidebar { get; set; }
 
-    private Gtk.ScrolledWindow scrolled;
-
     construct {
         preview_header = new Album.PreviewHeader ();
 
@@ -58,14 +56,18 @@ public class Album.PreviewView : Adw.Bin {
         });
     }
 
-    public void set_active (Album.ImageFlowBoxChild child) {
-        for (var index = 0; index < preview_scroller.page_count; index++) {
-            scrolled = preview_scroller.get_page (index);
-            var viewport = (Gtk.Viewport) scrolled.child;
-            if (((Gtk.Picture) viewport.child).paintable == child.paintable) {
-                picture = (Gtk.Picture) viewport.child;
-                preview_scroller.scroll_to (scrolled, false);
-                metadata_sidebar.update_metadata (child);
+    public Album.ImageFlowBoxChild? active {
+        private get {
+            return null;
+        } set {
+            for (var index = 0; index < preview_scroller.page_count; index++) {
+                var scrolled = preview_scroller.get_page (index);
+                var viewport = (Gtk.Viewport) scrolled.child;
+                if (((Gtk.Picture) viewport.child).paintable == value.paintable) {
+                    picture = (Gtk.Picture) viewport.child;
+                    preview_scroller.scroll_to (scrolled, false);
+                    metadata_sidebar.update_metadata (value);
+                }
             }
         }
     }
