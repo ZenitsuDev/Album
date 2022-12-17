@@ -35,8 +35,8 @@ public class Album.LocationsSideBar : Adw.Bin {
             var page1 = (Gtk.StackPage) r1;
             var page2 = (Gtk.StackPage) r2;
 
-            var title1 = ((Album.LocationImages) page1.child).title;
-            var title2 = ((Album.LocationImages) page2.child).title;
+            var title1 = ((Album.FolderImagesOverview) page1.child).title;
+            var title2 = ((Album.FolderImagesOverview) page2.child).title;
 
             if (title1 == "Trash") {
                 return 1;
@@ -51,7 +51,7 @@ public class Album.LocationsSideBar : Adw.Bin {
 
         listbox.bind_model (sort_model, (item) => {
             var stack_page = (Gtk.StackPage) item;
-            var image_view = (Album.LocationImages) stack_page.child;
+            var image_view = (Album.FolderImagesOverview) stack_page.child;
 
             return new Album.LocationsSideBarRow (image_view);
         });
@@ -71,10 +71,10 @@ public class Album.LocationsSideBar : Adw.Bin {
 
         listbox.row_selected.connect ((row) => {
             var sidebar_row = (Album.LocationsSideBarRow) row;
-            stack.visible_child = sidebar_row.location_images;
+            stack.visible_child = sidebar_row.image_overview;
 
             if (mobile_folder_switcher != null) {
-                mobile_folder_switcher.active_id = sidebar_row.location_images.title;
+                mobile_folder_switcher.active_id = sidebar_row.image_overview.title;
             }
         });
 
@@ -89,11 +89,11 @@ public class Album.LocationsSideBar : Adw.Bin {
         if (mobile_folder_switcher != null && sort_model != null) {
             for (var index = 0; index < sort_model.get_n_items (); index++) {
                 var stack_page = (Gtk.StackPage) sort_model.get_item (index);
-                var loc_images = (Album.LocationImages) stack_page.child;
-                mobile_folder_switcher.append (loc_images.title, loc_images.title);
+                var image_overview = (Album.FolderImagesOverview) stack_page.child;
+                mobile_folder_switcher.append (image_overview.title, image_overview.title);
 
-                if (stack.visible_child == loc_images) {
-                    mobile_folder_switcher.active_id = loc_images.title;
+                if (stack.visible_child == image_overview) {
+                    mobile_folder_switcher.active_id = image_overview.title;
                 }
             }
         }
@@ -101,18 +101,18 @@ public class Album.LocationsSideBar : Adw.Bin {
 }
 
 public class Album.LocationsSideBarRow : Gtk.ListBoxRow {
-    public Album.LocationImages location_images { get; construct; }
+    public Album.FolderImagesOverview image_overview { get; construct; }
     public string header { get; construct; }
 
-    public LocationsSideBarRow (Album.LocationImages location_images) {
+    public LocationsSideBarRow (Album.FolderImagesOverview image_overview) {
         Object (
-            location_images: location_images,
-            header: location_images.header
+            image_overview: image_overview,
+            header: image_overview.header
         );
     }
 
     construct {
-        var label = new Gtk.Label (location_images.title) {
+        var label = new Gtk.Label (image_overview.title) {
             valign = Gtk.Align.CENTER,
             xalign = -1,
             margin_start = 5,
@@ -120,16 +120,16 @@ public class Album.LocationsSideBarRow : Gtk.ListBoxRow {
         };
         label.add_css_class (Granite.STYLE_CLASS_H3_LABEL);
 
-        location_images.display_widget.valign = Gtk.Align.CENTER;
-        location_images.display_widget.margin_start = 5;
-        location_images.display_widget.margin_end = 5;
+        image_overview.display_widget.valign = Gtk.Align.CENTER;
+        image_overview.display_widget.margin_start = 5;
+        image_overview.display_widget.margin_end = 5;
 
         var box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
-        box.append (location_images.display_widget);
+        box.append (image_overview.display_widget);
         box.append (label);
 
         child = box;
-        tooltip_text = location_images.folder_name;
+        tooltip_text = image_overview.folder_name;
 
         var gesture = new Gtk.GestureClick () {
             button = Gdk.BUTTON_SECONDARY
@@ -157,15 +157,15 @@ public class Album.LocationsSideBarRow : Gtk.ListBoxRow {
             string[] diminished_folder = {};
 
             foreach (var folder in folders) {
-                if (folder != self.location_images.folder_name) {
+                if (folder != self.image_overview.folder_name) {
                     diminished_folder += folder;
                 }
             }
 
             Album.Application.settings.set_strv ("sidebar-folders", diminished_folder);
 
-            var stack = (Gtk.Stack) self.location_images.parent;
-            stack.remove (self.location_images);
+            var stack = (Gtk.Stack) self.image_overview.parent;
+            stack.remove (self.image_overview);
         });
     }
 }

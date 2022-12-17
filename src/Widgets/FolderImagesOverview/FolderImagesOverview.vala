@@ -1,4 +1,4 @@
-public class Album.LocationImages : Granite.SettingsPage {
+public class Album.FolderImagesOverview : Granite.SettingsPage {
     public string folder_name { get; construct; }
     public int index { get; construct; }
     public Album.MainWindow window { get; construct; }
@@ -6,11 +6,11 @@ public class Album.LocationImages : Granite.SettingsPage {
     public Album.PreviewView preview_page { get; set; }
     public Album.ImageFlowBoxChild closeable_child { get; set; }
     public Album.SegregatedFlowbox active_segfb { get; set; }
+    public Album.DateSortingBox date_sorting_box { get; set; }
 
-    private Gtk.ListBox box;
     private string[] date_array = {};
 
-    public LocationImages (string folder, int index, Album.MainWindow window) {
+    public FolderImagesOverview (string folder, int index, Album.MainWindow window) {
         var home_name = Environment.get_variable ("HOME");
         var title_name = (folder == home_name) ? "Home" : Filename.display_basename (folder);
         var image = new Gtk.Image () {
@@ -57,78 +57,10 @@ public class Album.LocationImages : Granite.SettingsPage {
     }
 
     construct {
-        box = new Gtk.ListBox () {
-            margin_start = 20,
-            margin_end = 20,
-            margin_top = 20,
-            margin_bottom = 20,
-            selection_mode = Gtk.SelectionMode.NONE
-        };
+        var file = File.new_for_path (folder_name);
+        load_images.begin (file);
 
-        box.set_sort_func ((row1, row2) => {
-            var date1 = ((Album.SegregatedFlowbox) row1).date.split ("-");
-            var date2 = ((Album.SegregatedFlowbox) row2).date.split ("-");
-
-            var year1 = int.parse (date1[0]);
-            var month1 = int.parse (date1[1]);
-            var day1 = int.parse (date1[2]);
-
-            var year2 = int.parse (date2[0]);
-            var month2 = int.parse (date2[1]);
-            var day2 = int.parse (date2[2]);
-
-            var func = 0;
-
-            if (year2 - year1 != 0) {
-                func = year2 - year1;
-            } else {
-                if (month2 - month1 != 0) {
-                    func = month2 - month1;
-                } else {
-                    func = day2 - day1;
-                }
-            }
-
-            switch (window.setting_popover.sort_func) {
-                case 0:
-                    return func; // new to old
-                    break;
-                case 1:
-                    return func * -1; // old to new
-                    break;
-            }
-        });
-
-        window.setting_popover.sort_func_changed.connect (() => {
-            box.invalidate_sort ();
-        });
-
-        box.set_filter_func ((wid) => {
-            var flowbox = ((Album.SegregatedFlowbox) wid).main_widget;
-            var children = flowbox.observe_children ();
-            for (var index = 0; index < children.get_n_items (); index++) {
-                var widget = (Album.ImageFlowBoxChild) children.get_item (index);
-                widget.width_request = window.requested_image_size;
-                widget.height_request = window.requested_image_size;
-            }
-
-            return true;
-        });
-
-        box.set_header_func ((row, before) => {
-            var header = ((Album.SegregatedFlowbox) row).header;
-            if (header != null) {
-                var label = new Granite.HeaderLabel (header) {
-                    halign = Gtk.Align.START
-                };
-
-                row.set_header (label);
-            }
-        });
-
-        window.notify["requested-image-size"].connect (() => {
-            box.invalidate_filter ();
-        });
+        date_sorting_box = new Album.DateSortingBox (window);
 
         preview_page = new Album.PreviewView ();
 
@@ -137,29 +69,24 @@ public class Album.LocationImages : Granite.SettingsPage {
             var viewport = (Gtk.Viewport) scrolled.child;
             preview_page.picture = (Gtk.Picture) viewport.child;
 
-            var new_index = (int) idx;
-            var box_index = 0;
-            while (((Album.SegregatedFlowbox) box.get_row_at_index (box_index))
-                .children_count - 1 < new_index) {
+            var clicked_child_index = (int) idx;
+            var checked_index = 0;
 
-                new_index = new_index -
-                    ((Album.SegregatedFlowbox) box.get_row_at_index (box_index)).children_count;
-                box_index++;
+            while (date_sorting_box.get_segfb (checked_index).children_count - 1 < clicked_child_index) {
+
+                clicked_child_index = clicked_child_index - date_sorting_box.get_segfb (checked_index).children_count;
+                checked_index++;
             }
 
-            active_segfb = (Album.SegregatedFlowbox) box.get_row_at_index (box_index);
-            closeable_child = (Album.ImageFlowBoxChild) 
-                active_segfb.main_widget.get_child_at_index (new_index);
+            active_segfb = date_sorting_box.get_segfb (checked_index);
+            closeable_child = (Album.ImageFlowBoxChild) active_segfb.main_widget.get_child_at_index (clicked_child_index);
 
             preview_page.metadata_sidebar.update_metadata (closeable_child);
         });
 
-        var file = File.new_for_path (folder_name);
-        load_images.begin (file);
-
 	    var keyboard_resize = new Gtk.EventControllerKey ();
 	    var scrolled = new Gtk.ScrolledWindow () {
-	        child = box,
+	        child = date_sorting_box,
 	        hexpand = true,
 	        vexpand = true
 	    };
@@ -207,7 +134,7 @@ public class Album.LocationImages : Granite.SettingsPage {
             window.requested_image_size = window.requested_image_size - 5;
         }
 
-        box.invalidate_filter ();
+        date_sorting_box.request_icon_resize ();
         Album.Application.settings.set_int ("image-size", window.requested_image_size);
     }
 
@@ -254,11 +181,11 @@ public class Album.LocationImages : Granite.SettingsPage {
             var segregated_flowbox = new Album.SegregatedFlowbox (this, modification_date, window);
             segregated_flowbox.append (groupable_child);
             date_array += modification_date;
-            box.append (segregated_flowbox);
+            date_sorting_box.append (segregated_flowbox);
         } else {
             for (var index = 0; index < date_array.length; index++) {
                 if (date_array[index] == modification_date) {
-                    var fb = (Album.SegregatedFlowbox) box.get_row_at_index (index);
+                    var fb = date_sorting_box.get_segfb (index);
                     fb.append (groupable_child);
                 }
             }
@@ -288,7 +215,7 @@ public class Album.LocationImages : Granite.SettingsPage {
 
         int item_index = 0;
         for (var index = 0; index < segfb_index; index++) {
-            var prev_segfb = (Album.SegregatedFlowbox) box.get_row_at_index (index);
+            var prev_segfb = date_sorting_box.get_segfb (index);
             item_index += (int) prev_segfb.main_widget.observe_children ().get_n_items ();
         }
 

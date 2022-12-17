@@ -1,12 +1,14 @@
 sources = [
     'Application.vala',
     'MainWindow.vala',
-    'Widgets/LocationImages.vala',
     'Widgets/SegregatedFlowbox.vala',
     'Widgets/ImageFlowBoxChild.vala',
     'Widgets/TransitionStack.vala',
     'Widgets/LocationsSideBar.vala',
     'Widgets/SettingPopover.vala',
+
+    'Widgets/FolderImagesOverview/DateSortingBox.vala',
+    'Widgets/FolderImagesOverview/FolderImagesOverview.vala',
 
     'Widgets/PreviewView/PreviewView.vala',
     'Widgets/PreviewView/PreviewHeader.vala',

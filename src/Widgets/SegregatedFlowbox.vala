@@ -1,7 +1,7 @@
 public class Album.SegregatedFlowbox : Gtk.ListBoxRow {
     public string date { get; construct; }
     public Album.MainWindow window { get; construct; }
-    public Album.LocationImages location_images { get; construct; }
+    public Album.FolderImagesOverview overview { get; construct; }
 
     public Gtk.FlowBox main_widget { get; set; }
     public int index { get; set; }
@@ -14,11 +14,11 @@ public class Album.SegregatedFlowbox : Gtk.ListBoxRow {
         "Thursday", "Friday", "Saturday", "Sunday"
     };
 
-    public SegregatedFlowbox (Album.LocationImages location_images, string date, Album.MainWindow window) {
+    public SegregatedFlowbox (Album.FolderImagesOverview overview, string date, Album.MainWindow window) {
         Object (
             date: date,
             window: window,
-            location_images: location_images
+            overview: overview
         );
     }
 
@@ -27,9 +27,9 @@ public class Album.SegregatedFlowbox : Gtk.ListBoxRow {
             return _can_close;
         } set {
             if (value) {
-                location_images.preview_page.preview_header.request_halt_preview.connect (location_images.halt_preview);
+                overview.preview_page.preview_header.request_halt_preview.connect (overview.halt_preview);
             } else {
-                location_images.preview_page.preview_header.request_halt_preview.disconnect (location_images.halt_preview);
+                overview.preview_page.preview_header.request_halt_preview.disconnect (overview.halt_preview);
             }
 
             _can_close = value;
@@ -97,9 +97,9 @@ public class Album.SegregatedFlowbox : Gtk.ListBoxRow {
             var child = (Album.ImageFlowBoxChild) chil;
             index = child.get_index ();
 
-            location_images.preview_page.active = child;
+            overview.preview_page.active = child;
 
-            window.transition_stack.add_shared_element (child.child, location_images.preview_page.picture);
+            window.transition_stack.add_shared_element (child.child, overview.preview_page.picture);
             window.transition_stack.navigate (window.preview_container);
 
             can_close = true;

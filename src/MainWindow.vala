@@ -79,7 +79,7 @@ public class Album.MainWindow : Gtk.ApplicationWindow {
         }
 
         for (var index = 0; index < folders.length; index++) {
-            images_stack.add_child (new Album.LocationImages (folders[index], index, this));
+            images_stack.add_child (new Album.FolderImagesOverview (folders[index], index, this));
         }
 
         var images_view = new Gtk.Box (Gtk.Orientation.VERTICAL, 0) {
@@ -165,7 +165,7 @@ public class Album.MainWindow : Gtk.ApplicationWindow {
 
                     Album.Application.settings.set_strv ("sidebar-folders", folders);
 
-                    images_stack.add_child (new Album.LocationImages (file.get_path (), folders.length, this));
+                    images_stack.add_child (new Album.FolderImagesOverview (file.get_path (), folders.length, this));
                 }
             }
         });
