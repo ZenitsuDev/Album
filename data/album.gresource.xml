@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-  <gresource prefix="/com/zendev/album">
+  <gresource prefix="/com/github/treppenwitz/litrato">
     <file compressed="true">application.css</file>
   </gresource>
 </gresources>

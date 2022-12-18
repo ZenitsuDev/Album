@@ -1,5 +1,5 @@
 project(
-  'com.zendev.album',
+  'com.github.treppenwitz.litrato',
   'vala', 'c',
   version: '1.0.0'
 )

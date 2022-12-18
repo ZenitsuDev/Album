@@ -2,13 +2,13 @@ public class Album.Application : Gtk.Application {
     public static Settings settings;
     public Application () {
         Object (
-            application_id: "com.zendev.album",
+            application_id: "com.github.treppenwitz.litrato",
             flags: ApplicationFlags.FLAGS_NONE
         );
     }
 
     static construct {
-        settings = new Settings ("com.zendev.album");
+        settings = new Settings ("com.github.treppenwitz.litrato");
     }
 
     protected override void activate () {
