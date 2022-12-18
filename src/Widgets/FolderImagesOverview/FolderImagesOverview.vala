@@ -180,6 +180,10 @@ public class Album.FolderImagesOverview : Granite.SettingsPage {
             keep_aspect_ratio = true
         };
 
+        // for zooming
+        var motion_controller = new Gtk.EventControllerMotion ();
+        picture.add_controller (motion_controller);
+
         var scrolled = new Gtk.ScrolledWindow () {
             child = picture,
             hexpand = true,
