@@ -138,6 +138,10 @@ public class Album.PreviewScroller : Gtk.Widget {
         return (Gtk.ScrolledWindow) images_carousel.get_nth_page (index);
     }
 
+    public Gtk.ScrolledWindow get_current () {
+        return (Gtk.ScrolledWindow) images_carousel.get_nth_page ((uint) images_carousel.get_position ());
+    }
+
     public void scroll_to (Gtk.ScrolledWindow child, bool animate) {
         images_carousel.scroll_to (child, animate);
     }

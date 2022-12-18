@@ -45,7 +45,6 @@ public class ThumbnailPaintable : Object, Gdk.Paintable {
 
     private bool loading;
     private static TextureLoader loader = new TextureLoader ();
-    public float scale { get; set; default = 1; }
 
     public ThumbnailPaintable (File file, string tag, int scale_factor) {
         this.file = file;
@@ -53,10 +52,6 @@ public class ThumbnailPaintable : Object, Gdk.Paintable {
         this.scale_factor = scale_factor;
 
         Gdk.Pixbuf.get_file_info (file.get_path (), out full_width, out full_height);
-
-        notify["scale"].connect (() => {
-            invalidate_size ();
-        });
     }
 
     private void snapshot (Gdk.Snapshot gdk_snapshot, double width, double height) {
@@ -86,14 +81,14 @@ public class ThumbnailPaintable : Object, Gdk.Paintable {
         var snapshot = gdk_snapshot as Gtk.Snapshot;
 
         if (cache == null && previous_cache != null) {
-            snapshot.append_texture (previous_cache, {{ 0, 0, }, { (float) width * scale, (float) height * scale }});
+            snapshot.append_texture (previous_cache, {{ 0, 0, }, { (float) width, (float) height}});
             return;
         }
 
         if (cache == null)
             return;
 
-        snapshot.append_texture (cache, {{ 0, 0, }, { (float) width * scale, (float) height * scale }});
+        snapshot.append_texture (cache, {{ 0, 0, }, { (float) width, (float) height }});
     }
 
     private int get_intrinsic_width () {
