@@ -42,7 +42,6 @@ public class ThumbnailPaintable : Object, Gdk.Paintable {
     private Gdk.Texture cache;
     private int last_width;
     private int last_height;
-    public bool is_rotate { get; set; }
 
     private bool loading;
     private static TextureLoader loader = new TextureLoader ();
