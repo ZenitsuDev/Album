@@ -10,6 +10,9 @@ public class Album.ControlsBox : Gtk.Box {
 
     construct {
         var zoom_control = new Album.Zoom (preview_view);
+        var rotate_control = new Album.Rotate (preview_view);
+
+        append (rotate_control);
         append (zoom_control);
 
         margin_start = 10;

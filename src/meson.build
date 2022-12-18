@@ -19,6 +19,7 @@ sources = [
 
     'Widgets/PreviewView/Controls/ControlsBox.vala',
     'Widgets/PreviewView/Controls/Zoom.vala',
+    'Widgets/PreviewView/Controls/Rotate.vala',
 
     'Widgets/FullScreenView/FullScreenViewer.vala'
 ]
