@@ -22,7 +22,7 @@ You can install Litrato by compiling it from source, here's a list of required d
 
 Clone repository and change directory
 ```
-git clone https://github.com/treeppenwitz/litrato.git
+git clone https://github.com/treppenwitz/litrato.git
 cd litrato
 ```
 
