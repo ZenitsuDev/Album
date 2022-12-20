@@ -13,6 +13,7 @@ sources = [
     'Widgets/PreviewView/PreviewView.vala',
     'Widgets/PreviewView/PreviewHeader.vala',
     'Widgets/PreviewView/PreviewScroller.vala',
+    'Widgets/PreviewView/PictureView.vala',
 
     'Widgets/PreviewView/MetaDataBox.vala',
     'Widgets/PreviewView/MetaDataSideBar.vala',

@@ -1,7 +1,7 @@
 public class Album.PreviewView : Adw.Bin {
     public Album.FolderImagesOverview images_overview { get; construct; }
 
-    public Gtk.Picture active_picture { get; set; }
+    public Album.PictureView active_picture { get; set; }
     public Album.PreviewHeader preview_header { get; set; }
     public Album.PreviewScroller preview_scroller { get; set; }
     public Album.MetaDataSideBar metadata_sidebar { get; set; }
@@ -17,8 +17,8 @@ public class Album.PreviewView : Adw.Bin {
             for (var index = 0; index < preview_scroller.page_count; index++) {
                 var scrolled = preview_scroller.get_page (index);
                 var viewport = (Gtk.Viewport) scrolled.child;
-                if (((Gtk.Picture) viewport.child).paintable == value.paintable) {
-                    active_picture = (Gtk.Picture) viewport.child;
+                if (((Album.PictureView) viewport.child).paintable == value.paintable) {
+                    active_picture = (Album.PictureView) viewport.child;
                     preview_scroller.scroll_to (scrolled, false);
                     metadata_sidebar.update_metadata (value);
                 }
@@ -83,7 +83,7 @@ public class Album.PreviewView : Adw.Bin {
     private void handle_scroller_active_changed (Adw.Carousel carousel, uint index) {
         var scrolled = preview_scroller.get_page (index);
         var viewport = (Gtk.Viewport) scrolled.child;
-        active_picture = (Gtk.Picture) viewport.child;
+        active_picture = (Album.PictureView) viewport.child;
 
         var clicked_child_index = (int) index;
         var checked_index = 0;
