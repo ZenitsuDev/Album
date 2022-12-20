@@ -54,7 +54,7 @@ public class Album.PictureView : Gtk.Widget {
             } else {
                 double multiplier;
                 if (direction) {
-                    multiplier = (degree < 270 && degree >= 0) ? ((degree - 90) / 90) : ((90 - (degree * -1)) / 90);
+                    multiplier = (degree < 270 && degree >= 90) ? ((degree - 90) / 90) : ((90 - (degree * -1)) / 90);
                 } else {
                     multiplier = (degree >= -180 && degree <= -90) ? (((degree.abs ()) - 90) / 90) : (((degree.abs ()) - 270) / 90);
                 }
