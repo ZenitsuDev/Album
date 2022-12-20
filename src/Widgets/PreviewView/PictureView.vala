@@ -16,9 +16,6 @@ public class Album.PictureView : Gtk.Widget {
     }
 
     protected override void snapshot (Gtk.Snapshot snapshot) {
-        int x, y;
-        double w, h;
-
         if (paintable == null) {
           return;
         }
@@ -29,6 +26,7 @@ public class Album.PictureView : Gtk.Widget {
 
         double picture_ratio = (double) width / height;
 
+        double w, h;
         if (ratio > picture_ratio) {
             w = width;
             h = width / ratio;
@@ -37,8 +35,8 @@ public class Album.PictureView : Gtk.Widget {
             h = height;
         }
 
-        x = (int) (width - Math.ceil (w)) / 2;
-        y = (int) Math.floor (height - Math.ceil (h)) / 2;
+        var x = (int) (width - Math.ceil (w)) / 2;
+        var y = (int) Math.floor (height - Math.ceil (h)) / 2;
 
         if (is_rotating) {
             if (width > parent.get_height () && (current_degree == 90 || current_degree == 270)) {
