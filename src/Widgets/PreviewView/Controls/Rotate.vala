@@ -63,70 +63,17 @@ public class Album.Rotate : Gtk.Box {
             current_degree -= 90;
         }
 
-        var animation = new Adw.TimedAnimation (view.active_picture, 0, 90, 100, 
-            new Adw.CallbackAnimationTarget ((value) => {
-                var scrolled = (Gtk.ScrolledWindow) view.active_picture.parent.parent;
-                var w = scrolled.get_allocated_width ();
-                var h = scrolled.get_allocated_height ();
-                var transform = new Gsk.Transform ();
-
-                if (direction) {
-                    switch (current_degree) {
-                        case 90:
-                            transform = transform.translate ({ w / 2.0f, h / 2.0f });
-                            transform = transform.rotate ((float) value);
-                            transform = transform.translate ({ -h / 2.0f, -w / 2.0f });
-                            view.active_picture.allocate (h, w, -1, transform);
-                            break;
-                        case 180:
-                            transform = transform.translate ({ w / 2.0f, h / 2.0f });
-                            transform = transform.rotate ((float) value + 90);
-                            transform = transform.translate ({ -w / 2.0f, -h / 2.0f });
-                            view.active_picture.allocate (w, h, -1, transform);
-                            break;
-                        case 270:
-                            transform = transform.translate ({ w / 2.0f, h / 2.0f });
-                            transform = transform.rotate ((float) value + 180);
-                            transform = transform.translate ({ -h / 2.0f, -w / 2.0f });
-                            view.active_picture.allocate (h, w, -1, transform);
-                            break;
-                        case 0:
-                            transform = transform.translate ({ w / 2.0f, h / 2.0f });
-                            transform = transform.rotate ((float) value + 270);
-                            transform = transform.translate ({ -w / 2.0f, -h / 2.0f });
-                            view.active_picture.allocate (w, h, -1, transform);
-                            break;
-                    }
-                } else {
-                    switch (current_degree) {
-                        case 270:
-                            transform = transform.translate ({ w / 2.0f, h / 2.0f });
-                            transform = transform.rotate (-1 * (float) value);
-                            transform = transform.translate ({ -h / 2.0f, -w / 2.0f });
-                            view.active_picture.allocate (h, w, -1, transform);
-                            break;
-                        case 180:
-                            transform = transform.translate ({ w / 2.0f, h / 2.0f });
-                            transform = transform.rotate ((-1 * (float) value) - 90);
-                            transform = transform.translate ({ -w / 2.0f, -h / 2.0f });
-                            view.active_picture.allocate (w, h, -1, transform);
-                            break;
-                        case 90:
-                            transform = transform.translate ({ w / 2.0f, h / 2.0f });
-                            transform = transform.rotate ((-1 * (float) value) - 180);
-                            transform = transform.translate ({ -h / 2.0f, -w / 2.0f });
-                            view.active_picture.allocate (h, w, -1, transform);
-                            break;
-                        case 0:
-                            transform = transform.translate ({ w / 2.0f, h / 2.0f });
-                            transform = transform.rotate ((-1 * (float) value) - 270);
-                            transform = transform.translate ({ -w / 2.0f, -h / 2.0f });
-                            view.active_picture.allocate (w, h, -1, transform);
-                            break;
-                    }
-                }
-            })
-        ) {
+        var animation = new Adw.TimedAnimation (view.active_picture, 0, 90, 200, new Adw.CallbackAnimationTarget ((value) => {
+            view.active_picture.is_rotating = true;
+            view.active_picture.current_degree = current_degree;
+            view.active_picture.direction = direction;
+            if (direction) {
+                view.active_picture.degree = current_degree + value - 90;
+            } else {
+                view.active_picture.degree = (-1 * (float) value) - (270 - current_degree);
+            }
+            view.active_picture.queue_resize ();
+        })) {
             easing = Adw.Easing.EASE_IN_OUT_CUBIC
         };
         animation.play ();

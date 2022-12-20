@@ -172,12 +172,11 @@ public class Album.FolderImagesOverview : Granite.SettingsPage {
             }
         }
 
-        var picture = new Gtk.Picture.for_paintable (groupable_child.paintable) {
+        var picture = new Album.PictureView (groupable_child.paintable) {
             halign = Gtk.Align.CENTER,
             valign = Gtk.Align.CENTER,
             hexpand = true,
-            vexpand = true,
-            keep_aspect_ratio = true
+            vexpand = true
         };
 
         // for zooming
