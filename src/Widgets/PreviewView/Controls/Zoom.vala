@@ -3,6 +3,8 @@ public class Album.Zoom : Adw.Bin {
     public Album.PreviewView preview_view { get; construct; }
     private int old_hval;
     private int old_wval;
+    private int new_hval;
+    private int new_wval;
     private Gtk.ScrolledWindow scrolled;
     private double cursor_x;
     private double cursor_y;
@@ -32,11 +34,11 @@ public class Album.Zoom : Adw.Bin {
             scroll_controller.scroll.connect ((x, y) => {
                 if (scroll_controller.get_current_event_state () == Gdk.ModifierType.CONTROL_MASK) {
                     if (y < 0) { // zooming in
-                        zoom_x (30);
-                        zoom_y (30);
+                        var zoom_val = (zoom_slider.get_value () < 300) ? Gtk.ScrollType.STEP_RIGHT : Gtk.ScrollType.NONE;
+                        zoom_slider.move_slider (zoom_val);
                     } else {
-                        zoom_x (-30);
-                        zoom_y (-30);
+                        var zoom_val = (zoom_slider.get_value () > 0) ? Gtk.ScrollType.STEP_LEFT : Gtk.ScrollType.NONE;
+                        zoom_slider.move_slider (zoom_val);
                     }
 
                     var hupper = scrolled.hadjustment.upper;
@@ -71,22 +73,20 @@ public class Album.Zoom : Adw.Bin {
                 var multiplier_w = (float) texture.get_intrinsic_width () / (float) scrolled.get_allocated_width ();
                 var multiplier_h = (float) texture.get_intrinsic_height () / (float) scrolled.get_allocated_height ();
 
-                var wval = (int) (val * multiplier_w);
-                var hval = (int) (val * multiplier_h);
+                new_wval = (int) (val * multiplier_w);
+                new_hval = (int) (val * multiplier_h);
 
-                if (hval >= old_hval && wval >= old_wval) {
-                    zoom_x (wval - old_wval);
-                    zoom_y (hval - old_hval);
+                if (new_hval >= old_hval && new_wval >= old_wval) {
+                    zoom ((new_wval - old_wval), (new_hval - old_hval));
                 } else {
-                    zoom_x (-(old_wval - wval));
-                    zoom_y (-(old_hval - hval));
+                    zoom ((-(old_wval - new_wval)), (-(old_hval - new_hval)));
                 }
 
                 scrolled.hadjustment.value = (scrolled.hadjustment.upper - scrolled.hadjustment.page_size) / 2;
                 scrolled.vadjustment.value = (scrolled.vadjustment.upper - scrolled.vadjustment.page_size) / 2;
 
-                old_hval = hval;
-                old_wval = wval;
+                old_hval = new_hval;
+                old_wval = new_wval;
             }
         });
         hexpand = true;
@@ -95,11 +95,10 @@ public class Album.Zoom : Adw.Bin {
         child = zoom_slider;
     }
 
-    private void zoom_x (int val) {
-        preview_view.active_picture.width_request = preview_view.active_picture.get_allocated_width () + val;
-    }
-
-    private void zoom_y (int val) {
-        preview_view.active_picture.height_request = preview_view.active_picture.get_allocated_height () + val;
+    private void zoom (int width, int height) {
+        preview_view.active_picture.set_size_request (
+            preview_view.active_picture.get_allocated_width () + width,
+            preview_view.active_picture.get_allocated_height () + height
+        );
     }
 }
