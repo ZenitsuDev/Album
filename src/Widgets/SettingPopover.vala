@@ -33,16 +33,14 @@ public class Album.SettingPopover : Gtk.Popover {
             }
         });
 
-        window.map.connect (() => {
-            var timeout = Timeout.add (500, () => {
-                if (Album.Application.settings.get_int ("date-sort-format") == 0) {
-                    mode_switch.active = false;
-                    sort_func = 0;
-                } else {
-                    mode_switch.active = true;
-                    sort_func = 1;
-                }
-            });
+        window.notify["visible"].connect (() => {
+            if (Album.Application.settings.get_int ("date-sort-format") == 0) {
+                mode_switch.active = false;
+                sort_func = 0;
+            } else {
+                mode_switch.active = true;
+                sort_func = 1;
+            }
         });
 
         var actions_grid = new Gtk.Grid () {
