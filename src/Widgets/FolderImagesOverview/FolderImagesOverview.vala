@@ -77,7 +77,7 @@ public class Album.FolderImagesOverview : Granite.SettingsPage {
         var keyboard_resize = new Gtk.EventControllerKey ();
 	    scrolled.add_controller (keyboard_resize);
 
-	    this.map.connect (() => {
+	    this.realize.connect (() => {
             window.preview_container.child = preview_page;
             scrolled.grab_focus ();
         });

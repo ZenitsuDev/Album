@@ -21,7 +21,7 @@ public class Album.Zoom : Adw.Bin {
         zoom_slider.add_mark (150, Gtk.PositionType.TOP, "<b>150</b>");
         zoom_slider.add_mark (225, Gtk.PositionType.TOP, "225 %");
 
-        this.map.connect (() => {
+        this.realize.connect (() => {
             scrolled = (Gtk.ScrolledWindow) preview_view.active_picture.parent.parent;
 
             var motion_controller = (Gtk.EventControllerMotion) preview_view.active_picture.observe_controllers ().get_item (0);

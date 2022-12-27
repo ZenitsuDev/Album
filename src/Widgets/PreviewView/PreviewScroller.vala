@@ -105,11 +105,11 @@ public class Album.PreviewScroller : Gtk.Widget {
             progress_carousel (true);
         });
 
-        this.map.connect (() => {
+        this.realize.connect (() => {
             handle_navigation_button_sensitivity ();
         });
 
-        this.unmap.connect (() => {
+        this.unrealize.connect (() => {
             go_back.sensitive = go_next.sensitive = true;
         });
 
