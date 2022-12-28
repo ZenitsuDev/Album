@@ -5,6 +5,7 @@ sources = [
     'Widgets/ImageFlowBoxChild.vala',
     'Widgets/TransitionStack.vala',
     'Widgets/LocationsSideBar.vala',
+    'Widgets/ThumbnailPaintable.vala',
     'Widgets/Sorter.vala',
 
     'Widgets/FolderImagesOverview/DateSortingBox.vala',
