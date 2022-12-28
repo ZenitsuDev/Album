@@ -75,7 +75,7 @@ public class Album.SegregatedFlowbox : Gtk.ListBoxRow {
                 }
             }
 
-            switch (window.setting_popover.sort_func) {
+            switch (window.sorter.sort_func) {
                 case 0:
                     return func; // new to old
                     break;
@@ -85,7 +85,7 @@ public class Album.SegregatedFlowbox : Gtk.ListBoxRow {
             }
         });
 
-        window.setting_popover.sort_func_changed.connect (() => {
+        window.sorter.sort_func_changed.connect (() => {
             main_widget.invalidate_sort ();
         });
 

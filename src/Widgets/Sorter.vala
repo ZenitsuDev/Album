@@ -1,20 +1,15 @@
-public class Album.SettingPopover : Gtk.Popover {
+public class Album.Sorter : Adw.Bin {
     public Album.MainWindow window { get; construct; }
 
     public int sort_func { get; set; }
 
     public signal void sort_func_changed ();
 
-    public SettingPopover (Album.MainWindow window) {
+    public Sorter (Album.MainWindow window) {
         Object (window: window);
     }
 
     construct {
-        var date_sort_label = new Granite.HeaderLabel ("Sorting:") {
-            margin_start = 12,
-            margin_top = 6
-        };
-
         var mode_switch = new Granite.ModeSwitch.from_icon_name ("view-sort-descending", "view-sort-ascending") {
             primary_icon_tooltip_text = "Newer first",
             secondary_icon_tooltip_text = "Older first"
@@ -43,14 +38,8 @@ public class Album.SettingPopover : Gtk.Popover {
             }
         });
 
-        var actions_grid = new Gtk.Grid () {
-            margin_end = 12,
-            margin_start = 12,
-            margin_bottom = 12
-        };
-        actions_grid.attach (date_sort_label, 0, 0);
-        actions_grid.attach (mode_switch, 0, 1);
+        child = mode_switch;
 
-        child = actions_grid;
+        margin_end = 10;
     }
 }

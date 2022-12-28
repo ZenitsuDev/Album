@@ -39,7 +39,7 @@ public class Album.DateSortingBox : Adw.Bin {
                 }
             }
 
-            switch (window.setting_popover.sort_func) {
+            switch (window.sorter.sort_func) {
                 case 0:
                     return func; // new to old
                     break;
@@ -49,7 +49,7 @@ public class Album.DateSortingBox : Adw.Bin {
             }
         });
 
-        window.setting_popover.sort_func_changed.connect (() => {
+        window.sorter.sort_func_changed.connect (() => {
             listbox.invalidate_sort ();
         });
 
