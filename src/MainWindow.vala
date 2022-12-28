@@ -1,9 +1,8 @@
 public class Album.MainWindow : Gtk.ApplicationWindow {
     public Adw.Bin preview_container { get; set; }
     public Adw.Leaflet leaflet { get; set; }
-    public Gtk.MenuButton sort_button { get; set; }
     public TransitionStack transition_stack { get; set; }
-    public Album.SettingPopover setting_popover { get; set; }
+    public Album.Sorter sorter { get; set; }
     public Gtk.ComboBoxText mobile_folder_switcher { get; set; }
 
     public int requested_image_size { get; set; }
@@ -31,20 +30,13 @@ public class Album.MainWindow : Gtk.ApplicationWindow {
 
         var title_label = new Granite.HeaderLabel ("Album");
 
-        setting_popover = new Album.SettingPopover (this);
+        sorter = new Album.Sorter (this);
 
         mobile_folder_switcher = new Gtk.ComboBoxText () {
             visible = false,
             hexpand = true
         };
         mobile_folder_switcher.add_css_class (Granite.STYLE_CLASS_FLAT);
-
-        sort_button = new Gtk.MenuButton () {
-            popover = setting_popover,
-            can_focus = false
-        };
-        sort_button.set_icon_name ("preferences-system-symbolic");
-        sort_button.add_css_class (Granite.STYLE_CLASS_FLAT);
 
         var images_header = new Gtk.HeaderBar () {
             decoration_layout = ":maximize",
@@ -54,7 +46,7 @@ public class Album.MainWindow : Gtk.ApplicationWindow {
             title_widget = title_label
         };
         images_header.pack_start (mobile_folder_switcher);
-        images_header.pack_end (sort_button);
+        images_header.pack_end (sorter);
         images_header.add_css_class ("titlebar");
         images_header.add_css_class (Granite.STYLE_CLASS_FLAT);
         images_header.add_css_class (Granite.STYLE_CLASS_DEFAULT_DECORATION);
