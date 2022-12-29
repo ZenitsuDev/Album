@@ -29,7 +29,7 @@ public class Album.MainWindow : Gtk.ApplicationWindow {
 
         preview_container = new Adw.Bin ();
 
-        var title_label = new Granite.HeaderLabel ("Album");
+        var title_label = new Granite.HeaderLabel ("Litrato");
 
         sorter = new Album.Sorter (this);
 
