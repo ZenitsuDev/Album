@@ -1,6 +1,6 @@
-public class Album.Zoom : Adw.Bin {
+public class Litrato.Zoom : Adw.Bin {
     public Gtk.Scale zoom_slider { get; set; }
-    public Album.PreviewView preview_view { get; construct; }
+    public Litrato.PreviewView preview_view { get; construct; }
     private int old_hval;
     private int old_wval;
     private int new_hval;
@@ -9,7 +9,7 @@ public class Album.Zoom : Adw.Bin {
     private double cursor_x;
     private double cursor_y;
 
-    public Zoom (Album.PreviewView preview_view) {
+    public Zoom (Litrato.PreviewView preview_view) {
         Object (preview_view: preview_view);
     }
 

@@ -1,4 +1,4 @@
-public class Album.LocationsSideBar : Adw.Bin {
+public class Litrato.LocationsSideBar : Adw.Bin {
     public Gtk.Stack stack { get; construct; }
 
     private Gtk.ComboBoxText mobile_folder_switcher;
@@ -35,8 +35,8 @@ public class Album.LocationsSideBar : Adw.Bin {
             var page1 = (Gtk.StackPage) r1;
             var page2 = (Gtk.StackPage) r2;
 
-            var title1 = ((Album.FolderImagesOverview) page1.child).title;
-            var title2 = ((Album.FolderImagesOverview) page2.child).title;
+            var title1 = ((Litrato.FolderImagesOverview) page1.child).title;
+            var title2 = ((Litrato.FolderImagesOverview) page2.child).title;
 
             if (title1 == "Trash") {
                 return 1;
@@ -51,13 +51,13 @@ public class Album.LocationsSideBar : Adw.Bin {
 
         listbox.bind_model (sort_model, (item) => {
             var stack_page = (Gtk.StackPage) item;
-            var image_view = (Album.FolderImagesOverview) stack_page.child;
+            var image_view = (Litrato.FolderImagesOverview) stack_page.child;
 
-            return new Album.LocationsSideBarRow (image_view);
+            return new Litrato.LocationsSideBarRow (image_view);
         });
 
         listbox.set_header_func ((row, before) => {
-            var header = ((Album.LocationsSideBarRow) row).header;
+            var header = ((Litrato.LocationsSideBarRow) row).header;
             if (header != null) {
                 var label = new Gtk.Label (header) {
                     halign = Gtk.Align.START,
@@ -70,7 +70,7 @@ public class Album.LocationsSideBar : Adw.Bin {
         });
 
         listbox.row_selected.connect ((row) => {
-            var sidebar_row = (Album.LocationsSideBarRow) row;
+            var sidebar_row = (Litrato.LocationsSideBarRow) row;
             stack.visible_child = sidebar_row.image_overview;
 
             if (mobile_folder_switcher != null) {
@@ -89,7 +89,7 @@ public class Album.LocationsSideBar : Adw.Bin {
         if (mobile_folder_switcher != null && sort_model != null) {
             for (var index = 0; index < sort_model.get_n_items (); index++) {
                 var stack_page = (Gtk.StackPage) sort_model.get_item (index);
-                var image_overview = (Album.FolderImagesOverview) stack_page.child;
+                var image_overview = (Litrato.FolderImagesOverview) stack_page.child;
                 mobile_folder_switcher.append (image_overview.title, image_overview.title);
 
                 if (stack.visible_child == image_overview) {
@@ -100,11 +100,11 @@ public class Album.LocationsSideBar : Adw.Bin {
     }
 }
 
-public class Album.LocationsSideBarRow : Gtk.ListBoxRow {
-    public Album.FolderImagesOverview image_overview { get; construct; }
+public class Litrato.LocationsSideBarRow : Gtk.ListBoxRow {
+    public Litrato.FolderImagesOverview image_overview { get; construct; }
     public string header { get; construct; }
 
-    public LocationsSideBarRow (Album.FolderImagesOverview image_overview) {
+    public LocationsSideBarRow (Litrato.FolderImagesOverview image_overview) {
         Object (
             image_overview: image_overview,
             header: image_overview.header
@@ -152,8 +152,8 @@ public class Album.LocationsSideBarRow : Gtk.ListBoxRow {
         });
 
         install_action ("app.remove", null, (widget) => {
-            var self = (Album.LocationsSideBarRow) widget;
-            var folders = Album.Application.settings.get_strv ("sidebar-folders");
+            var self = (Litrato.LocationsSideBarRow) widget;
+            var folders = Litrato.Application.settings.get_strv ("sidebar-folders");
             string[] diminished_folder = {};
 
             foreach (var folder in folders) {
@@ -162,7 +162,7 @@ public class Album.LocationsSideBarRow : Gtk.ListBoxRow {
                 }
             }
 
-            Album.Application.settings.set_strv ("sidebar-folders", diminished_folder);
+            Litrato.Application.settings.set_strv ("sidebar-folders", diminished_folder);
 
             var stack = (Gtk.Stack) self.image_overview.parent;
             stack.remove (self.image_overview);

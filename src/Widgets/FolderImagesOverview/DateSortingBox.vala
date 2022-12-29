@@ -1,8 +1,8 @@
-public class Album.DateSortingBox : Adw.Bin {
-    public Album.MainWindow window { get; construct; }
+public class Litrato.DateSortingBox : Adw.Bin {
+    public Litrato.MainWindow window { get; construct; }
     private Gtk.ListBox listbox;
 
-    public DateSortingBox (Album.MainWindow window) {
+    public DateSortingBox (Litrato.MainWindow window) {
         Object (window: window);
     }
 
@@ -16,8 +16,8 @@ public class Album.DateSortingBox : Adw.Bin {
         };
 
         listbox.set_sort_func ((row1, row2) => {
-            var date1 = ((Album.SegregatedFlowbox) row1).date.split ("-");
-            var date2 = ((Album.SegregatedFlowbox) row2).date.split ("-");
+            var date1 = ((Litrato.SegregatedFlowbox) row1).date.split ("-");
+            var date2 = ((Litrato.SegregatedFlowbox) row2).date.split ("-");
 
             var year1 = int.parse (date1[0]);
             var month1 = int.parse (date1[1]);
@@ -54,10 +54,10 @@ public class Album.DateSortingBox : Adw.Bin {
         });
 
         listbox.set_filter_func ((wid) => {
-            var flowbox = ((Album.SegregatedFlowbox) wid).main_widget;
+            var flowbox = ((Litrato.SegregatedFlowbox) wid).main_widget;
             var children = flowbox.observe_children ();
             for (var index = 0; index < children.get_n_items (); index++) {
-                var widget = (Album.ImageFlowBoxChild) children.get_item (index);
+                var widget = (Litrato.ImageFlowBoxChild) children.get_item (index);
                 widget.width_request = window.requested_image_size;
                 widget.height_request = window.requested_image_size;
             }
@@ -66,7 +66,7 @@ public class Album.DateSortingBox : Adw.Bin {
         });
 
         listbox.set_header_func ((row, before) => {
-            var header = ((Album.SegregatedFlowbox) row).header;
+            var header = ((Litrato.SegregatedFlowbox) row).header;
             if (header != null) {
                 var label = new Granite.HeaderLabel (header) {
                     halign = Gtk.Align.START
@@ -83,15 +83,15 @@ public class Album.DateSortingBox : Adw.Bin {
         child = listbox;
     }
 
-    public Album.SegregatedFlowbox get_segfb (int index) {
-        return (Album.SegregatedFlowbox) listbox.get_row_at_index (index);
+    public Litrato.SegregatedFlowbox get_segfb (int index) {
+        return (Litrato.SegregatedFlowbox) listbox.get_row_at_index (index);
     }
 
     public void request_icon_resize () {
         listbox.invalidate_filter ();
     }
 
-    public void append (Album.SegregatedFlowbox segfb) {
+    public void append (Litrato.SegregatedFlowbox segfb) {
         listbox.append (segfb);
     }
 }

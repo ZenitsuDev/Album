@@ -1,16 +1,16 @@
-public class Album.FolderImagesOverview : Granite.SettingsPage {
+public class Litrato.FolderImagesOverview : Granite.SettingsPage {
     public string folder_name { get; construct; }
     public int index { get; construct; }
-    public Album.MainWindow window { get; construct; }
+    public Litrato.MainWindow window { get; construct; }
 
-    public Album.PreviewView preview_page { get; set; }
-    public Album.ImageFlowBoxChild closeable_child { get; set; }
-    public Album.SegregatedFlowbox active_segfb { get; set; }
-    public Album.DateSortingBox date_sorting_box { get; set; }
+    public Litrato.PreviewView preview_page { get; set; }
+    public Litrato.ImageFlowBoxChild closeable_child { get; set; }
+    public Litrato.SegregatedFlowbox active_segfb { get; set; }
+    public Litrato.DateSortingBox date_sorting_box { get; set; }
 
     private string[] date_array = {};
 
-    public FolderImagesOverview (string folder, int index, Album.MainWindow window) {
+    public FolderImagesOverview (string folder, int index, Litrato.MainWindow window) {
         var home_name = Environment.get_variable ("HOME");
         var title_name = (folder == home_name) ? "Home" : Filename.display_basename (folder);
         var image = new Gtk.Image () {
@@ -60,9 +60,9 @@ public class Album.FolderImagesOverview : Granite.SettingsPage {
         var file = File.new_for_path (folder_name);
         load_images.begin (file);
 
-        date_sorting_box = new Album.DateSortingBox (window);
+        date_sorting_box = new Litrato.DateSortingBox (window);
 
-        preview_page = new Album.PreviewView (this);
+        preview_page = new Litrato.PreviewView (this);
 
 	    var scrolled = new Gtk.ScrolledWindow () {
 	        child = date_sorting_box,
@@ -116,7 +116,7 @@ public class Album.FolderImagesOverview : Granite.SettingsPage {
         }
 
         date_sorting_box.request_icon_resize ();
-        Album.Application.settings.set_int ("image-size", window.requested_image_size);
+        Litrato.Application.settings.set_int ("image-size", window.requested_image_size);
     }
 
     public void halt_preview () {
@@ -156,10 +156,10 @@ public class Album.FolderImagesOverview : Granite.SettingsPage {
 
         var size_data = info.get_size ().to_string ();
 
-        var groupable_child = new Album.ImageFlowBoxChild (file, modification_date, modification_time, size_data);
+        var groupable_child = new Litrato.ImageFlowBoxChild (file, modification_date, modification_time, size_data);
 
         if (!(modification_date in date_array)) {
-            var segregated_flowbox = new Album.SegregatedFlowbox (this, modification_date, window);
+            var segregated_flowbox = new Litrato.SegregatedFlowbox (this, modification_date, window);
             segregated_flowbox.append (groupable_child);
             date_array += modification_date;
             date_sorting_box.append (segregated_flowbox);
@@ -172,7 +172,7 @@ public class Album.FolderImagesOverview : Granite.SettingsPage {
             }
         }
 
-        var picture = new Album.PictureView (groupable_child) {
+        var picture = new Litrato.PictureView (groupable_child) {
             halign = Gtk.Align.CENTER,
             valign = Gtk.Align.CENTER,
             hexpand = true,
@@ -193,8 +193,8 @@ public class Album.FolderImagesOverview : Granite.SettingsPage {
         preview_page.preview_scroller.insert_page (scrolled, position);
     }
 
-    private int derive_position (Album.ImageFlowBoxChild child) {
-        var segregated_flowbox = (Album.SegregatedFlowbox) child.parent.parent;
+    private int derive_position (Litrato.ImageFlowBoxChild child) {
+        var segregated_flowbox = (Litrato.SegregatedFlowbox) child.parent.parent;
         var segfb_index = segregated_flowbox.get_index ();
 
         int item_index = 0;

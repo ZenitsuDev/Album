@@ -1,6 +1,6 @@
-public class Album.ControlsBox : Gtk.Box {
-    public Album.PreviewView preview_view { get; construct; }
-    public ControlsBox (Album.PreviewView preview_view) {
+public class Litrato.ControlsBox : Gtk.Box {
+    public Litrato.PreviewView preview_view { get; construct; }
+    public ControlsBox (Litrato.PreviewView preview_view) {
         Object (
             orientation: Gtk.Orientation.HORIZONTAL,
             spacing: 0,
@@ -9,8 +9,8 @@ public class Album.ControlsBox : Gtk.Box {
     }
 
     construct {
-        var zoom_control = new Album.Zoom (preview_view);
-        var rotate_control = new Album.Rotate (preview_view);
+        var zoom_control = new Litrato.Zoom (preview_view);
+        var rotate_control = new Litrato.Rotate (preview_view);
 
         append (rotate_control);
         append (zoom_control);

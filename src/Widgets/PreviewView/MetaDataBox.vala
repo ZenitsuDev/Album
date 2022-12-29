@@ -1,4 +1,4 @@
-public class Album.MetaDataBox : Gtk.Box {
+public class Litrato.MetaDataBox : Gtk.Box {
     private Gtk.Label meta_title;
     private Gtk.Label meta_size;
     private Gtk.Label meta_time;
@@ -58,7 +58,7 @@ public class Album.MetaDataBox : Gtk.Box {
         append (meta_size);
     }
 
-    public void update_properties (Album.ImageFlowBoxChild child) {
+    public void update_properties (Litrato.ImageFlowBoxChild child) {
         meta_title.label = child.file.get_basename ();
         meta_time.label = "<b>Time modified: </b>%s".printf (child.time);
         meta_date.label = "<b>Date modified: </b>%s".printf (child.date);

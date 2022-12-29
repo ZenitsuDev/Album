@@ -1,15 +1,15 @@
-public class Album.PreviewScroller : Gtk.Widget {
+public class Litrato.PreviewScroller : Gtk.Widget {
     private Gtk.Button go_back;
     private Gtk.Button go_next;
     private Adw.Carousel images_carousel;
     private Gtk.Revealer back_revealer;
     private Gtk.Revealer next_revealer;
 
-    public Album.PreviewView preview_view { get; construct; }
+    public Litrato.PreviewView preview_view { get; construct; }
 
     public signal void active_changed (Adw.Carousel carousel, uint index);
 
-    public PreviewScroller (Album.PreviewView view) {
+    public PreviewScroller (Litrato.PreviewView view) {
         Object (preview_view: view);
     }
 

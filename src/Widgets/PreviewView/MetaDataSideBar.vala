@@ -1,5 +1,5 @@
-public class Album.MetaDataSideBar : Gtk.Box {
-    private Album.MetaDataBox meta_data_box;
+public class Litrato.MetaDataSideBar : Gtk.Box {
+    private Litrato.MetaDataBox meta_data_box;
     private Gtk.Button to_preview;
 
     public signal void request_show_preview ();
@@ -38,7 +38,7 @@ public class Album.MetaDataSideBar : Gtk.Box {
         header.add_css_class (Granite.STYLE_CLASS_FLAT);
         header.add_css_class (Granite.STYLE_CLASS_DEFAULT_DECORATION);
 
-        meta_data_box = new Album.MetaDataBox ();
+        meta_data_box = new Litrato.MetaDataBox ();
 
         append (header);
         append (meta_data_box);
@@ -49,7 +49,7 @@ public class Album.MetaDataSideBar : Gtk.Box {
         });
     }
 
-    public void update_metadata (Album.ImageFlowBoxChild child) {
+    public void update_metadata (Litrato.ImageFlowBoxChild child) {
         meta_data_box.update_properties (child);
     }
 }

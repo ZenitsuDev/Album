@@ -1,4 +1,4 @@
-public class Album.CancelDeleteToast : Granite.Toast {
+public class Litrato.CancelDeleteToast : Granite.Toast {
 
     public CancelDeleteToast (string title) {
         Object (title: title);

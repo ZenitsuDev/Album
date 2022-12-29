@@ -1,4 +1,4 @@
-public class Album.PreviewHeader : Gtk.Widget {
+public class Litrato.PreviewHeader : Gtk.Widget {
     private Granite.HeaderLabel label;
     private Gtk.Button view_fullscreen;
     private Gtk.Button mobile_view_info;

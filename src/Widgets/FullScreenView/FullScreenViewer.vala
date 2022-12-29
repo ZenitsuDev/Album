@@ -1,4 +1,4 @@
-public class Album.FullScreenViewer : Gtk.Window {
+public class Litrato.FullScreenViewer : Gtk.Window {
     public Gdk.Paintable paintable { get; construct; }
 
     public FullScreenViewer (Gdk.Paintable paintable) {

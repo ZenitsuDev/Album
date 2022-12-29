@@ -1,7 +1,7 @@
-public class Album.SegregatedFlowbox : Gtk.ListBoxRow {
+public class Litrato.SegregatedFlowbox : Gtk.ListBoxRow {
     public string date { get; construct; }
-    public Album.MainWindow window { get; construct; }
-    public Album.FolderImagesOverview overview { get; construct; }
+    public Litrato.MainWindow window { get; construct; }
+    public Litrato.FolderImagesOverview overview { get; construct; }
 
     public Gtk.FlowBox main_widget { get; set; }
     public int index { get; set; }
@@ -14,7 +14,7 @@ public class Album.SegregatedFlowbox : Gtk.ListBoxRow {
         "Thursday", "Friday", "Saturday", "Sunday"
     };
 
-    public SegregatedFlowbox (Album.FolderImagesOverview overview, string date, Album.MainWindow window) {
+    public SegregatedFlowbox (Litrato.FolderImagesOverview overview, string date, Litrato.MainWindow window) {
         Object (
             date: date,
             window: window,
@@ -49,8 +49,8 @@ public class Album.SegregatedFlowbox : Gtk.ListBoxRow {
         };
 
         main_widget.set_sort_func ((child1, child2) => {
-            var imagefb1 = (Album.ImageFlowBoxChild) child1;
-            var imagefb2 = (Album.ImageFlowBoxChild) child2;
+            var imagefb1 = (Litrato.ImageFlowBoxChild) child1;
+            var imagefb2 = (Litrato.ImageFlowBoxChild) child2;
 
             var time1 = imagefb1.time.split (":");
             var time2 = imagefb2.time.split (":");
@@ -94,7 +94,7 @@ public class Album.SegregatedFlowbox : Gtk.ListBoxRow {
         can_focus = false;
 
         main_widget.child_activated.connect ((chil) => {
-            var child = (Album.ImageFlowBoxChild) chil;
+            var child = (Litrato.ImageFlowBoxChild) chil;
             index = child.get_index ();
 
             overview.preview_page.active = child;
@@ -127,12 +127,12 @@ public class Album.SegregatedFlowbox : Gtk.ListBoxRow {
         }
     }
 
-    public void append (Album.ImageFlowBoxChild child) {
+    public void append (Litrato.ImageFlowBoxChild child) {
         main_widget.append (child);
         children_count = (int) main_widget.observe_children ().get_n_items ();
     }
 
-    public Album.ImageFlowBoxChild get_image_child (int index) {
-        return (Album.ImageFlowBoxChild) main_widget.get_child_at_index (index);
+    public Litrato.ImageFlowBoxChild get_image_child (int index) {
+        return (Litrato.ImageFlowBoxChild) main_widget.get_child_at_index (index);
     }
 }

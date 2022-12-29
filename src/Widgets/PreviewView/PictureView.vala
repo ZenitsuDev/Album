@@ -1,5 +1,5 @@
-public class Album.PictureView : Gtk.Widget {
-    public Album.ImageFlowBoxChild flowbox_child { get; construct; }
+public class Litrato.PictureView : Gtk.Widget {
+    public Litrato.ImageFlowBoxChild flowbox_child { get; construct; }
     public Gdk.Paintable paintable { get; set; }
     public float scale { get; set; }
     public bool is_rotating { get; set; }
@@ -8,7 +8,7 @@ public class Album.PictureView : Gtk.Widget {
     public bool direction { get; set; }
     private float diff_scaling = 1;
 
-    public PictureView (Album.ImageFlowBoxChild flowbox_child) {
+    public PictureView (Litrato.ImageFlowBoxChild flowbox_child) {
         Object (flowbox_child: flowbox_child);
     }
 

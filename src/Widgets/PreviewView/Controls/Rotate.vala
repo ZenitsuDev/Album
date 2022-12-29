@@ -1,8 +1,8 @@
-public class Album.Rotate : Gtk.Box {
-    public Album.PreviewView view { get; construct; }
+public class Litrato.Rotate : Gtk.Box {
+    public Litrato.PreviewView view { get; construct; }
     private int current_degree = 0;
 
-    public Rotate (Album.PreviewView view) {
+    public Rotate (Litrato.PreviewView view) {
         Object (
             view: view,
             orientation: Gtk.Orientation.HORIZONTAL,

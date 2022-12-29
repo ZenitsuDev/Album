@@ -1,9 +1,9 @@
-public class Album.MainWindow : Gtk.ApplicationWindow {
+public class Litrato.MainWindow : Gtk.ApplicationWindow {
     public Adw.Bin preview_container { get; set; }
     public Adw.Leaflet leaflet { get; set; }
     public TransitionStack transition_stack { get; set; }
-    public Album.Sorter sorter { get; set; }
-    public Album.CancelDeleteToast cancel_delete_toast { get; set; }
+    public Litrato.Sorter sorter { get; set; }
+    public Litrato.CancelDeleteToast cancel_delete_toast { get; set; }
     public Gtk.ComboBoxText mobile_folder_switcher { get; set; }
 
     public int requested_image_size { get; set; }
@@ -16,7 +16,7 @@ public class Album.MainWindow : Gtk.ApplicationWindow {
         "/.local/share/Trash/files"
     };
 
-    public MainWindow (Album.Application app) {
+    public MainWindow (Litrato.Application app) {
         Object (application: app);
     }
 
@@ -25,13 +25,13 @@ public class Album.MainWindow : Gtk.ApplicationWindow {
         default_height = 640;
         titlebar = new Gtk.Label ("") { visible = false };
         icon_name = "com.zendev.album";
-        requested_image_size = Album.Application.settings.get_int ("image-size");
+        requested_image_size = Litrato.Application.settings.get_int ("image-size");
 
         preview_container = new Adw.Bin ();
 
         var title_label = new Granite.HeaderLabel ("Litrato");
 
-        sorter = new Album.Sorter (this);
+        sorter = new Litrato.Sorter (this);
 
         mobile_folder_switcher = new Gtk.ComboBoxText () {
             visible = false,
@@ -58,7 +58,7 @@ public class Album.MainWindow : Gtk.ApplicationWindow {
             vexpand = true
         };
 
-        var folders = Album.Application.settings.get_strv ("sidebar-folders");
+        var folders = Litrato.Application.settings.get_strv ("sidebar-folders");
         if (folders.length == 0) {
             var home_folder = Environment.get_variable ("HOME");
             foreach (var defaults in default_folders) {
@@ -68,14 +68,14 @@ public class Album.MainWindow : Gtk.ApplicationWindow {
                 }
             }
 
-            Album.Application.settings.set_strv ("sidebar-folders", folders);
+            Litrato.Application.settings.set_strv ("sidebar-folders", folders);
         }
 
         for (var index = 0; index < folders.length; index++) {
-            images_stack.add_child (new Album.FolderImagesOverview (folders[index], index, this));
+            images_stack.add_child (new Litrato.FolderImagesOverview (folders[index], index, this));
         }
 
-        cancel_delete_toast = new Album.CancelDeleteToast ("File was deleted.");
+        cancel_delete_toast = new Litrato.CancelDeleteToast ("File was deleted.");
         var toast_enabling_overlay = new Gtk.Overlay () {
             child = images_stack,
             vexpand = true,
@@ -102,7 +102,7 @@ public class Album.MainWindow : Gtk.ApplicationWindow {
         locations_header.add_css_class (Granite.STYLE_CLASS_FLAT);
         locations_header.add_css_class (Granite.STYLE_CLASS_DEFAULT_DECORATION);
 
-        var locations = new Album.LocationsSideBar (images_stack) {
+        var locations = new Litrato.LocationsSideBar (images_stack) {
             vexpand = true,
             alternative = mobile_folder_switcher
         };
@@ -164,9 +164,9 @@ public class Album.MainWindow : Gtk.ApplicationWindow {
                 if (file.query_file_type (FileQueryInfoFlags.NONE) == FileType.DIRECTORY) {
                     folders += file.get_path ();
 
-                    Album.Application.settings.set_strv ("sidebar-folders", folders);
+                    Litrato.Application.settings.set_strv ("sidebar-folders", folders);
 
-                    images_stack.add_child (new Album.FolderImagesOverview (file.get_path (), folders.length, this));
+                    images_stack.add_child (new Litrato.FolderImagesOverview (file.get_path (), folders.length, this));
                 }
             }
         });

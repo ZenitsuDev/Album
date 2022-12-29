@@ -1,24 +1,24 @@
-public class Album.PreviewView : Adw.Bin {
-    public Album.FolderImagesOverview images_overview { get; construct; }
+public class Litrato.PreviewView : Adw.Bin {
+    public Litrato.FolderImagesOverview images_overview { get; construct; }
 
-    public Album.PictureView active_picture { get; set; }
-    public Album.PreviewHeader preview_header { get; set; }
-    public Album.PreviewScroller preview_scroller { get; set; }
-    public Album.MetaDataSideBar metadata_sidebar { get; set; }
+    public Litrato.PictureView active_picture { get; set; }
+    public Litrato.PreviewHeader preview_header { get; set; }
+    public Litrato.PreviewScroller preview_scroller { get; set; }
+    public Litrato.MetaDataSideBar metadata_sidebar { get; set; }
 
-    public PreviewView (Album.FolderImagesOverview overview) {
+    public PreviewView (Litrato.FolderImagesOverview overview) {
         Object (images_overview: overview);
     }
 
-    public Album.ImageFlowBoxChild? active {
+    public Litrato.ImageFlowBoxChild? active {
         private get {
             return null;
         } set {
             for (var index = 0; index < preview_scroller.page_count; index++) {
                 var scrolled = preview_scroller.get_page (index);
                 var viewport = (Gtk.Viewport) scrolled.child;
-                if (((Album.PictureView) viewport.child).paintable == value.paintable) {
-                    active_picture = (Album.PictureView) viewport.child;
+                if (((Litrato.PictureView) viewport.child).paintable == value.paintable) {
+                    active_picture = (Litrato.PictureView) viewport.child;
                     preview_scroller.scroll_to (scrolled, false);
                     metadata_sidebar.update_metadata (value);
                 }
@@ -27,11 +27,11 @@ public class Album.PreviewView : Adw.Bin {
     }
 
     construct {
-        preview_header = new Album.PreviewHeader ();
+        preview_header = new Litrato.PreviewHeader ();
 
-        preview_scroller = new Album.PreviewScroller (this);
+        preview_scroller = new Litrato.PreviewScroller (this);
 
-        var controls_box = new Album.ControlsBox (this);
+        var controls_box = new Litrato.ControlsBox (this);
 
         var preview_view = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
         preview_view.append (preview_header);
@@ -39,7 +39,7 @@ public class Album.PreviewView : Adw.Bin {
         preview_view.append (controls_box);
         preview_view.add_css_class (Granite.STYLE_CLASS_VIEW);
 
-        metadata_sidebar = new Album.MetaDataSideBar ();
+        metadata_sidebar = new Litrato.MetaDataSideBar ();
 
         var leaflet = new Adw.Leaflet () {
             transition_type = Adw.LeafletTransitionType.SLIDE,
@@ -64,7 +64,7 @@ public class Album.PreviewView : Adw.Bin {
 
         preview_header.request_fullscreen.connect (() => {
             if (active_picture != null) {
-                var window = new Album.FullScreenViewer (active_picture.paintable);
+                var window = new Litrato.FullScreenViewer (active_picture.paintable);
                 window.present ();
             }
         });
@@ -83,7 +83,7 @@ public class Album.PreviewView : Adw.Bin {
     private void handle_scroller_active_changed (Adw.Carousel carousel, uint index) {
         var scrolled = preview_scroller.get_page (index);
         var viewport = (Gtk.Viewport) scrolled.child;
-        active_picture = (Album.PictureView) viewport.child;
+        active_picture = (Litrato.PictureView) viewport.child;
 
         var clicked_child_index = (int) index;
         var checked_index = 0;

@@ -1,4 +1,4 @@
-public class Album.ImageFlowBoxChild : Gtk.FlowBoxChild {
+public class Litrato.ImageFlowBoxChild : Gtk.FlowBoxChild {
     public File file { get; construct; }
     public string time { get; construct; }
     public string date { get; construct; }
@@ -50,8 +50,8 @@ public class Album.ImageFlowBoxChild : Gtk.FlowBoxChild {
         });
 
         install_action ("app.trash", null, (widget) => {
-            var self = (Album.ImageFlowBoxChild) widget;
-            var window = (Album.MainWindow) self.get_root ();
+            var self = (Litrato.ImageFlowBoxChild) widget;
+            var window = (Litrato.MainWindow) self.get_root ();
             window.cancel_delete_toast.send_notification ();
             window.cancel_delete_toast.handle_delete (self.file);
             window.cancel_delete_toast.default_action.connect (() => {

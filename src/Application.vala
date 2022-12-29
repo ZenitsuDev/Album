@@ -1,4 +1,4 @@
-public class Album.Application : Gtk.Application {
+public class Litrato.Application : Gtk.Application {
     public static Settings settings;
     public Application () {
         Object (
@@ -12,7 +12,7 @@ public class Album.Application : Gtk.Application {
     }
 
     protected override void activate () {
-        var window = new Album.MainWindow (this);
+        var window = new Litrato.MainWindow (this);
         window.present ();
 
         add_window (window);
@@ -28,7 +28,7 @@ public class Album.Application : Gtk.Application {
     }
 
     public static int main (string[] args) {
-        var app = new Album.Application ();
+        var app = new Litrato.Application ();
         return app.run (args);
     }
 }
