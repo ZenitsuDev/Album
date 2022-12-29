@@ -1,5 +1,6 @@
 public class Album.PictureView : Gtk.Widget {
-    public Gdk.Paintable paintable { get; construct; }
+    public Album.ImageFlowBoxChild flowbox_child { get; construct; }
+    public Gdk.Paintable paintable { get; set; }
     public float scale { get; set; }
     public bool is_rotating { get; set; }
     public double degree { get; set; }
@@ -7,12 +8,27 @@ public class Album.PictureView : Gtk.Widget {
     public bool direction { get; set; }
     private float diff_scaling = 1;
 
-    public PictureView (Gdk.Paintable paintable) {
-        Object (paintable: paintable);
+    public PictureView (Album.ImageFlowBoxChild flowbox_child) {
+        Object (flowbox_child: flowbox_child);
     }
 
     construct {
         scale = 1.0f;
+        paintable = flowbox_child.paintable;
+
+        var drag_source = new Gtk.DragSource () {
+            actions = Gdk.DragAction.COPY
+        };
+        add_controller (drag_source);
+
+        drag_source.prepare.connect ((x, y) => {
+            return new Gdk.ContentProvider.for_value (flowbox_child.file.get_uri ());
+        });
+
+        drag_source.drag_begin.connect ((source, drag) => {
+            var child = new Gtk.WidgetPaintable (this);
+            source.set_icon (child, 20, 20);
+        });
     }
 
     protected override void snapshot (Gtk.Snapshot snapshot) {
