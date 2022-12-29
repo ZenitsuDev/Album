@@ -3,6 +3,7 @@ public class Album.MainWindow : Gtk.ApplicationWindow {
     public Adw.Leaflet leaflet { get; set; }
     public TransitionStack transition_stack { get; set; }
     public Album.Sorter sorter { get; set; }
+    public Album.CancelDeleteToast cancel_delete_toast { get; set; }
     public Gtk.ComboBoxText mobile_folder_switcher { get; set; }
 
     public int requested_image_size { get; set; }
@@ -74,12 +75,20 @@ public class Album.MainWindow : Gtk.ApplicationWindow {
             images_stack.add_child (new Album.FolderImagesOverview (folders[index], index, this));
         }
 
+        cancel_delete_toast = new Album.CancelDeleteToast ("File was deleted.");
+        var toast_enabling_overlay = new Gtk.Overlay () {
+            child = images_stack,
+            vexpand = true,
+            hexpand = true
+        };
+        toast_enabling_overlay.add_overlay (cancel_delete_toast);
+
         var images_view = new Gtk.Box (Gtk.Orientation.VERTICAL, 0) {
             vexpand = true,
             hexpand = true
         };
         images_view.append (images_header);
-        images_view.append (images_stack);
+        images_view.append (toast_enabling_overlay);
         images_view.add_css_class (Granite.STYLE_CLASS_VIEW);
 
         var locations_header = new Gtk.HeaderBar () {
