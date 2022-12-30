@@ -1,6 +1,6 @@
-public class Litrato.CancelDeleteToast : Granite.Toast {
+public class Litrato.DeleteToast : Granite.Toast {
 
-    public CancelDeleteToast (string title) {
+    public DeleteToast (string title) {
         Object (title: title);
     }
 

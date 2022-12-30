@@ -3,7 +3,7 @@ public class Litrato.MainWindow : Gtk.ApplicationWindow {
     public Adw.Leaflet leaflet { get; set; }
     public TransitionStack transition_stack { get; set; }
     public Litrato.Sorter sorter { get; set; }
-    public Litrato.CancelDeleteToast cancel_delete_toast { get; set; }
+    public Litrato.DeleteToast delete_toast { get; set; }
     public Gtk.ComboBoxText mobile_folder_switcher { get; set; }
 
     public int requested_image_size { get; set; }
@@ -75,13 +75,13 @@ public class Litrato.MainWindow : Gtk.ApplicationWindow {
             images_stack.add_child (new Litrato.FolderImagesOverview (folders[index], index, this));
         }
 
-        cancel_delete_toast = new Litrato.CancelDeleteToast ("File was deleted.");
+        delete_toast = new Litrato.DeleteToast ("File was deleted.");
         var toast_enabling_overlay = new Gtk.Overlay () {
             child = images_stack,
             vexpand = true,
             hexpand = true
         };
-        toast_enabling_overlay.add_overlay (cancel_delete_toast);
+        toast_enabling_overlay.add_overlay (delete_toast);
 
         var images_view = new Gtk.Box (Gtk.Orientation.VERTICAL, 0) {
             vexpand = true,

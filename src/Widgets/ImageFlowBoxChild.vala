@@ -52,13 +52,13 @@ public class Litrato.ImageFlowBoxChild : Gtk.FlowBoxChild {
         install_action ("app.trash", null, (widget) => {
             var self = (Litrato.ImageFlowBoxChild) widget;
             var window = (Litrato.MainWindow) self.get_root ();
-            window.cancel_delete_toast.send_notification ();
-            window.cancel_delete_toast.handle_delete (self.file);
-            window.cancel_delete_toast.default_action.connect (() => {
+            window.delete_toast.send_notification ();
+            window.delete_toast.handle_delete (self.file);
+            window.delete_toast.default_action.connect (() => {
                 self.show ();
-                window.cancel_delete_toast.handle_restore (self.file);
+                window.delete_toast.handle_restore (self.file);
             });
-            window.cancel_delete_toast.closed.connect (() => {
+            window.delete_toast.closed.connect (() => {
                 var parent = (Gtk.FlowBox) self.parent;
                 parent.remove (self);
             });
