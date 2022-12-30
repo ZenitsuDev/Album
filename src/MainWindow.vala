@@ -3,8 +3,7 @@ public class Litrato.MainWindow : Gtk.ApplicationWindow {
     public Adw.Leaflet leaflet { get; set; }
     public TransitionStack transition_stack { get; set; }
     public Litrato.Sorter sorter { get; set; }
-    public Litrato.CancelDeleteToast cancel_delete_toast { get; set; }
-    public Gtk.ComboBoxText mobile_folder_switcher { get; set; }
+    public Litrato.DeleteToast delete_toast { get; set; }
 
     public int requested_image_size { get; set; }
 
@@ -33,12 +32,6 @@ public class Litrato.MainWindow : Gtk.ApplicationWindow {
 
         sorter = new Litrato.Sorter (this);
 
-        mobile_folder_switcher = new Gtk.ComboBoxText () {
-            visible = false,
-            hexpand = true
-        };
-        mobile_folder_switcher.add_css_class (Granite.STYLE_CLASS_FLAT);
-
         var images_header = new Gtk.HeaderBar () {
             decoration_layout = ":maximize",
             show_title_buttons = true,
@@ -46,7 +39,6 @@ public class Litrato.MainWindow : Gtk.ApplicationWindow {
             halign = Gtk.Align.FILL,
             title_widget = title_label
         };
-        images_header.pack_start (mobile_folder_switcher);
         images_header.pack_end (sorter);
         images_header.add_css_class ("titlebar");
         images_header.add_css_class (Granite.STYLE_CLASS_FLAT);
@@ -75,13 +67,13 @@ public class Litrato.MainWindow : Gtk.ApplicationWindow {
             images_stack.add_child (new Litrato.FolderImagesOverview (folders[index], index, this));
         }
 
-        cancel_delete_toast = new Litrato.CancelDeleteToast ("File was deleted.");
+        delete_toast = new Litrato.DeleteToast ("File was deleted.");
         var toast_enabling_overlay = new Gtk.Overlay () {
             child = images_stack,
             vexpand = true,
             hexpand = true
         };
-        toast_enabling_overlay.add_overlay (cancel_delete_toast);
+        toast_enabling_overlay.add_overlay (delete_toast);
 
         var images_view = new Gtk.Box (Gtk.Orientation.VERTICAL, 0) {
             vexpand = true,
@@ -103,8 +95,7 @@ public class Litrato.MainWindow : Gtk.ApplicationWindow {
         locations_header.add_css_class (Granite.STYLE_CLASS_DEFAULT_DECORATION);
 
         var locations = new Litrato.LocationsSideBar (images_stack) {
-            vexpand = true,
-            alternative = mobile_folder_switcher
+            vexpand = true
         };
 
         var add_button = new Gtk.Button.with_label ("Add a Folder") {
@@ -139,16 +130,6 @@ public class Litrato.MainWindow : Gtk.ApplicationWindow {
         transition_stack.add_child (preview_container);
 
         child = transition_stack;
-
-        leaflet.notify["folded"].connect (() => {
-            if (leaflet.folded) {
-                mobile_folder_switcher.visible = true;
-                title_label.visible = false;
-            } else {
-                mobile_folder_switcher.visible = false;
-                title_label.visible = true;
-            }
-        });
 
         var add_dialog = new Gtk.FileChooserNative ("Add a folder", this, Gtk.FileChooserAction.SELECT_FOLDER, "Add", "Cancel") {
             transient_for = this

@@ -1,7 +1,7 @@
 public class Litrato.PreviewHeader : Gtk.Widget {
     private Granite.HeaderLabel label;
     private Gtk.Button view_fullscreen;
-    private Gtk.Button mobile_view_info;
+    private Gtk.Button folded_view_info;
     private Gtk.Box preview_halt_box;
 
     public signal void request_halt_preview ();
@@ -25,7 +25,7 @@ public class Litrato.PreviewHeader : Gtk.Widget {
             return false;
         } set {
             view_fullscreen.visible = preview_halt_box.get_last_child ().visible = value;
-            mobile_view_info.visible = value ? false : true;
+            folded_view_info.visible = value ? false : true;
         }
     }
 
@@ -49,12 +49,12 @@ public class Litrato.PreviewHeader : Gtk.Widget {
         };
         view_fullscreen.add_css_class (Granite.STYLE_CLASS_FLAT);
 
-        mobile_view_info = new Gtk.Button () {
+        folded_view_info = new Gtk.Button () {
             child = new Gtk.Image.from_icon_name ("dialog-information-symbolic"),
             can_focus = false,
             visible = false
         };
-        mobile_view_info.add_css_class (Granite.STYLE_CLASS_FLAT);
+        folded_view_info.add_css_class (Granite.STYLE_CLASS_FLAT);
 
         var preview_header = new Gtk.HeaderBar () {
             decoration_layout = "close:",
@@ -64,7 +64,7 @@ public class Litrato.PreviewHeader : Gtk.Widget {
         };
         preview_header.pack_start (halt_button);
         preview_header.pack_end (view_fullscreen);
-        preview_header.pack_end (mobile_view_info);
+        preview_header.pack_end (folded_view_info);
         preview_header.add_css_class ("titlebar");
         preview_header.add_css_class (Granite.STYLE_CLASS_FLAT);
         preview_header.add_css_class (Granite.STYLE_CLASS_DEFAULT_DECORATION);
@@ -80,7 +80,7 @@ public class Litrato.PreviewHeader : Gtk.Widget {
             request_fullscreen ();
         });
 
-        mobile_view_info.clicked.connect (() => {
+        folded_view_info.clicked.connect (() => {
             request_view_sidebar ();
         });
     }

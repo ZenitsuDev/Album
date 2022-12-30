@@ -7,7 +7,7 @@ sources = [
     'Widgets/LocationsSideBar.vala',
     'Widgets/ThumbnailPaintable.vala',
     'Widgets/Sorter.vala',
-    'Widgets/CancelDeleteToast.vala',
+    'Widgets/DeleteToast.vala',
 
     'Widgets/FolderImagesOverview/DateSortingBox.vala',
     'Widgets/FolderImagesOverview/FolderImagesOverview.vala',
