@@ -1,5 +1,6 @@
 <div>
     <h1 align="center">Litrato</h1>
+    <h3 align="center">Not to be confused with "retrato", for litrato is Filipino Translation.</h3>
     <h3 align="center">View your photos in a modern way.</h3>
 </div>
 
@@ -7,6 +8,23 @@
 
 <br>
 Litrato is a photo gallery and viewer built using Vala, Gtk and Libadwaita.
+
+## TODO
+ - `Make leaflets bound bidirectional`
+ - `Monitor changes to directories`
+ - `Make dedicated Trash UI`
+ - `Fix Warnings`
+ - `Fix Zooming`
+ - `More metadata (data) :<`
+ - `Add Crop Function`
+ - `Make it work on mobile`
+ - `Allow editing on other elementary software`
+ - `Allow anotations`
+ - `Refactor Image Displaying Procedure`
+ - `Reexamine Design and UI (maybe make it look prettier?)`
+ - `Make icon`
+ - `Make application`
+ - `Make flatpak`
 
 ## Install from source using meson
 You can install Litrato by compiling it from source, here's a list of required dependencies:
@@ -42,5 +60,3 @@ Feel free to send pull requests to this repository with your code.
 
 <br>
 <sup><b>License</b>: GNU GPLv3</sup>
-<br>
-<sup>© Copyright 2022 Treppenwitz</sup>
