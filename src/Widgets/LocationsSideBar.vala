@@ -1,24 +1,11 @@
 public class Litrato.LocationsSideBar : Adw.Bin {
     public Gtk.Stack stack { get; construct; }
 
-    private Gtk.ComboBoxText mobile_folder_switcher;
     private Gtk.SortListModel sort_model;
     private Gtk.ListBox listbox;
 
     public LocationsSideBar (Gtk.Stack stack) {
         Object (stack: stack);
-    }
-
-    public Gtk.ComboBoxText alternative {
-        get {
-            return mobile_folder_switcher;
-        } set {
-            mobile_folder_switcher = value;
-            mobile_folder_switcher.changed.connect (() => {
-                listbox.select_row (listbox.get_row_at_index (mobile_folder_switcher.active));
-            });
-            update_mobile_switchers ();
-        }
     }
 
     construct {
@@ -72,31 +59,7 @@ public class Litrato.LocationsSideBar : Adw.Bin {
         listbox.row_selected.connect ((row) => {
             var sidebar_row = (Litrato.LocationsSideBarRow) row;
             stack.visible_child = sidebar_row.image_overview;
-
-            if (mobile_folder_switcher != null) {
-                mobile_folder_switcher.active_id = sidebar_row.image_overview.title;
-            }
         });
-
-        sort_model.items_changed.connect (() => {
-            if (mobile_folder_switcher != null) {
-                update_mobile_switchers ();
-            }
-        });
-    }
-
-    private void update_mobile_switchers () {
-        if (mobile_folder_switcher != null && sort_model != null) {
-            for (var index = 0; index < sort_model.get_n_items (); index++) {
-                var stack_page = (Gtk.StackPage) sort_model.get_item (index);
-                var image_overview = (Litrato.FolderImagesOverview) stack_page.child;
-                mobile_folder_switcher.append (image_overview.title, image_overview.title);
-
-                if (stack.visible_child == image_overview) {
-                    mobile_folder_switcher.active_id = image_overview.title;
-                }
-            }
-        }
     }
 }
 
