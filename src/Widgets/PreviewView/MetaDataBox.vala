@@ -11,7 +11,7 @@ public class Litrato.MetaDataBox : Gtk.Box {
             orientation: Gtk.Orientation.VERTICAL,
             spacing: 0,
             vexpand: true,
-            margin_start: 6,
+            margin_start: 15,
             margin_end: 6,
             margin_top: 6,
             margin_bottom: 6
