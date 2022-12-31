@@ -32,7 +32,7 @@ public class Litrato.PreviewHeader : Gtk.Widget {
     construct {
         preview_halt_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
         preview_halt_box.append (new Gtk.Image.from_icon_name ("go-previous-symbolic"));
-        preview_halt_box.append (new Granite.HeaderLabel ("Return to Gallery"));
+        preview_halt_box.append (new Gtk.Label ("<b>Return to Gallery</b>") { use_markup = true });
 
         var halt_button = new Gtk.Button () {
             child = preview_halt_box
