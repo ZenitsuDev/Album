@@ -13,7 +13,6 @@ Litrato is a photo gallery and viewer built using Vala, Gtk and Libadwaita.
  - `Make leaflets bound bidirectional`
  - `Monitor changes to directories`
  - `Make dedicated Trash UI`
- - `Fix Warnings`
  - `Fix Zooming`
  - `More metadata (data) :<`
  - `Add Crop Function`
