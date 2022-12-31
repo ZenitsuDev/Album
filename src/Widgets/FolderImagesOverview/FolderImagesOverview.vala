@@ -108,24 +108,6 @@ public class Litrato.FolderImagesOverview : Granite.SettingsPage {
 	    });
     }
 
-    private void enlarge_icons (bool val) {
-        if (val) {
-            window.requested_image_size = window.requested_image_size + 5;
-        } else {
-            window.requested_image_size = window.requested_image_size - 5;
-        }
-
-        date_sorting_box.request_icon_resize ();
-        Litrato.Application.settings.set_int ("image-size", window.requested_image_size);
-    }
-
-    public void halt_preview () {
-        window.transition_stack.add_shared_element (preview_page.active_picture, closeable_child.child);
-        window.transition_stack.navigate (window.leaflet);
-
-        active_segfb.can_close = false;
-    }
-
     private async void load_images (File folder) {
         try {
             var e = yield folder.enumerate_children_async ("standard::*", 0, Priority.DEFAULT);
@@ -204,5 +186,23 @@ public class Litrato.FolderImagesOverview : Granite.SettingsPage {
         }
 
         return item_index + child.get_index ();
+    }
+
+    private void enlarge_icons (bool val) {
+        if (val) {
+            window.requested_image_size = window.requested_image_size + 5;
+        } else {
+            window.requested_image_size = window.requested_image_size - 5;
+        }
+
+        date_sorting_box.request_icon_resize ();
+        Litrato.Application.settings.set_int ("image-size", window.requested_image_size);
+    }
+
+    public void halt_preview () {
+        window.transition_stack.add_shared_element (preview_page.active_picture, closeable_child.child);
+        window.transition_stack.navigate (window.leaflet);
+
+        active_segfb.can_close = false;
     }
 }

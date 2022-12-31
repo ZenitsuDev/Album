@@ -11,6 +11,7 @@ Litrato is a photo gallery and viewer built using Vala, Gtk and Libadwaita.
 
 ## TODO
  - `Monitor changes to directories`
+ - `Make placeholder if directory is empty`
  - `Make dedicated Trash UI`
  - `Fix Zooming`
  - `More metadata (data) :<`
