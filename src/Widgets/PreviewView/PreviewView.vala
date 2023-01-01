@@ -1,7 +1,7 @@
 public class Litrato.PreviewView : Adw.Bin {
     public Litrato.FolderImagesOverview images_overview { get; construct; }
 
-    public Litrato.PictureView active_picture { get; set; }
+    public Litrato.PictureWidget active_picture { get; set; }
     public Litrato.PreviewHeader preview_header { get; set; }
     public Litrato.PreviewScroller preview_scroller { get; set; }
     public Litrato.MetaDataSideBar metadata_sidebar { get; set; }
@@ -15,11 +15,10 @@ public class Litrato.PreviewView : Adw.Bin {
             return null;
         } set {
             for (var index = 0; index < preview_scroller.page_count; index++) {
-                var scrolled = preview_scroller.get_page (index);
-                var viewport = (Gtk.Viewport) scrolled.child;
-                if (((Litrato.PictureView) viewport.child).paintable == value.paintable) {
-                    active_picture = (Litrato.PictureView) viewport.child;
-                    preview_scroller.scroll_to (scrolled, false);
+                var view = preview_scroller.get_page (index);
+                if (view.child.paintable == value.paintable) {
+                    active_picture = view.child;
+                    preview_scroller.scroll_to (view, false);
                     metadata_sidebar.update_metadata (value);
                 }
             }
@@ -81,16 +80,14 @@ public class Litrato.PreviewView : Adw.Bin {
     }
 
     private void handle_scroller_active_changed (Adw.Carousel carousel, uint index) {
-        var scrolled = preview_scroller.get_page (index);
-        var viewport = (Gtk.Viewport) scrolled.child;
-        active_picture = (Litrato.PictureView) viewport.child;
+        var view = preview_scroller.get_page (index);
+        active_picture = view.child;
 
         var clicked_child_index = (int) index;
         var checked_index = 0;
         var ds_box = images_overview.date_sorting_box;
 
         while (ds_box.get_segfb (checked_index).children_count - 1 < clicked_child_index) {
-
             clicked_child_index = clicked_child_index - ds_box.get_segfb (checked_index).children_count;
             checked_index++;
         }

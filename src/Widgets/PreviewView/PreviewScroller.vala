@@ -130,19 +130,19 @@ public class Litrato.PreviewScroller : Gtk.Widget {
         this.get_last_child ().unparent ();
     }
 
-    public void insert_page (Gtk.ScrolledWindow child, int position) {
+    public void insert_page (Litrato.PictureView child, int position) {
         images_carousel.insert (child, position);
     }
 
-    public Gtk.ScrolledWindow get_page (uint index) {
-        return (Gtk.ScrolledWindow) images_carousel.get_nth_page (index);
+    public Litrato.PictureView get_page (uint index) {
+        return (Litrato.PictureView) images_carousel.get_nth_page (index);
     }
 
-    public Gtk.ScrolledWindow get_current () {
-        return (Gtk.ScrolledWindow) images_carousel.get_nth_page ((uint) images_carousel.get_position ());
-    }
+    // public Gtk.ScrolledWindow get_current () {
+    //     return (Gtk.ScrolledWindow) images_carousel.get_nth_page ((uint) images_carousel.get_position ());
+    // }
 
-    public void scroll_to (Gtk.ScrolledWindow child, bool animate) {
+    public void scroll_to (Litrato.PictureView child, bool animate) {
         images_carousel.scroll_to (child, animate);
     }
 
