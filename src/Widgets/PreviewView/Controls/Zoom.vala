@@ -5,7 +5,7 @@ public class Litrato.Zoom : Adw.Bin {
     private int old_wval;
     private int new_hval;
     private int new_wval;
-    private Gtk.ScrolledWindow scrolled;
+    private Litrato.PictureView picture_view;
     private double cursor_x;
     private double cursor_y;
 
@@ -22,17 +22,15 @@ public class Litrato.Zoom : Adw.Bin {
         zoom_slider.add_mark (225, Gtk.PositionType.TOP, "225 %");
 
         this.realize.connect (() => {
-            scrolled = (Gtk.ScrolledWindow) preview_view.active_picture.parent.parent;
+            picture_view = preview_view.active_picture.view;
 
-            var motion_controller = (Gtk.EventControllerMotion) preview_view.active_picture.observe_controllers ().get_item (0);
-            motion_controller.motion.connect ((x,y) => {
+            preview_view.active_picture.motion_controller.motion.connect ((x,y) => {
                 cursor_x = x;
                 cursor_y = y;
             });
 
-            var scroll_controller = (Gtk.EventControllerScroll) scrolled.observe_controllers ().get_item (1);
-            scroll_controller.scroll.connect ((x, y) => {
-                if (scroll_controller.get_current_event_state () == Gdk.ModifierType.CONTROL_MASK) {
+            picture_view.scroll_controller.scroll.connect ((x, y) => {
+                if (picture_view.scroll_controller.get_current_event_state () == Gdk.ModifierType.CONTROL_MASK) {
                     if (y < 0) { // zooming in
                         var zoom_val = (zoom_slider.get_value () < 300) ? Gtk.ScrollType.STEP_RIGHT : Gtk.ScrollType.NONE;
                         zoom_slider.move_slider (zoom_val);
@@ -41,37 +39,37 @@ public class Litrato.Zoom : Adw.Bin {
                         zoom_slider.move_slider (zoom_val);
                     }
 
-                    var hupper = scrolled.hadjustment.upper;
-                    var vupper = scrolled.vadjustment.upper;
-                    var hsize = scrolled.hadjustment.page_size;
-                    var vsize = scrolled.vadjustment.page_size;
+                    var hupper = picture_view.hadjustment.upper;
+                    var vupper = picture_view.vadjustment.upper;
+                    var hsize = picture_view.hadjustment.page_size;
+                    var vsize = picture_view.vadjustment.page_size;
 
                     var hcenter = (hupper - hsize) / 2;
                     var vcenter = (vupper - vsize) / 2;
 
                     if (cursor_x < hcenter) {
-                        scrolled.hadjustment.value = (hcenter - cursor_x) / 2;
+                        picture_view.hadjustment.value = (hcenter - cursor_x) / 2;
                     } else {
-                        scrolled.hadjustment.value = (hcenter + cursor_x) / 2;
+                        picture_view.hadjustment.value = (hcenter + cursor_x) / 2;
                     }
 
                     if (cursor_y < vcenter) {
-                        scrolled.vadjustment.value = (vcenter - cursor_y) / 2;
+                        picture_view.vadjustment.value = (vcenter - cursor_y) / 2;
                     } else {
-                        scrolled.vadjustment.value = (vcenter + cursor_y) / 2;
+                        picture_view.vadjustment.value = (vcenter + cursor_y) / 2;
                     }
                 }
             });
         });
 
         zoom_slider.adjustment.notify["value"].connect (() => {
-            if (preview_view.active_picture != null && scrolled != null) {
+            if (preview_view.active_picture != null && picture_view != null) {
                 var texture = preview_view.active_picture.paintable;
 
                 var val = (int) zoom_slider.get_value ();
 
-                var multiplier_w = (float) texture.get_intrinsic_width () / (float) scrolled.get_allocated_width ();
-                var multiplier_h = (float) texture.get_intrinsic_height () / (float) scrolled.get_allocated_height ();
+                var multiplier_w = (float) texture.get_intrinsic_width () / (float) picture_view.get_allocated_width ();
+                var multiplier_h = (float) texture.get_intrinsic_height () / (float) picture_view.get_allocated_height ();
 
                 new_wval = (int) (val * multiplier_w);
                 new_hval = (int) (val * multiplier_h);
@@ -82,8 +80,8 @@ public class Litrato.Zoom : Adw.Bin {
                     zoom ((-(old_wval - new_wval)), (-(old_hval - new_hval)));
                 }
 
-                scrolled.hadjustment.value = (scrolled.hadjustment.upper - scrolled.hadjustment.page_size) / 2;
-                scrolled.vadjustment.value = (scrolled.vadjustment.upper - scrolled.vadjustment.page_size) / 2;
+                picture_view.hadjustment.value = (picture_view.hadjustment.upper - picture_view.hadjustment.page_size) / 2;
+                picture_view.vadjustment.value = (picture_view.vadjustment.upper - picture_view.vadjustment.page_size) / 2;
 
                 old_hval = new_hval;
                 old_wval = new_wval;

@@ -154,25 +154,10 @@ public class Litrato.FolderImagesOverview : Granite.SettingsPage {
             }
         }
 
-        var picture = new Litrato.PictureView (groupable_child) {
-            halign = Gtk.Align.CENTER,
-            valign = Gtk.Align.CENTER,
-            hexpand = true,
-            vexpand = true
-        };
-
-        // for zooming
-        var motion_controller = new Gtk.EventControllerMotion ();
-        picture.add_controller (motion_controller);
-
-        var scrolled = new Gtk.ScrolledWindow () {
-            child = picture,
-            hexpand = true,
-            vexpand = true
-        };
+        var picture = new Litrato.PictureView (groupable_child);
 
         var position = derive_position (groupable_child);
-        preview_page.preview_scroller.insert_page (scrolled, position);
+        preview_page.preview_scroller.insert_page (picture, position);
     }
 
     private int derive_position (Litrato.ImageFlowBoxChild child) {
